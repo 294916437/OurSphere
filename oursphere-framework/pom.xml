@@ -10,11 +10,12 @@
     </parent>
 
     <artifactId>oursphere-framework</artifactId>
-
-    <properties>
-        <maven.compiler.source>19</maven.compiler.source>
-        <maven.compiler.target>19</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <packaging>pom</packaging>
+    <name>${project.artifactId}</name>
+    <description>provide base functions</description>
+    <modules>
+        <module>common</module>
+        <module>logger</module>
+    </modules>
 
 </project>

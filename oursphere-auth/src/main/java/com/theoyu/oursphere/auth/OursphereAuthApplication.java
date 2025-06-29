@@ -1,0 +1,13 @@
+package com.theoyu.oursphere.auth;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class OursphereAuthApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(OursphereAuthApplication.class, args);
+    }
+
+}

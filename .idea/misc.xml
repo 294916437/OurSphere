@@ -5,7 +5,16 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-auth/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-framework/common/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-framework/logger/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/oursphere-common/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-framework/oursphere-common/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_19" default="true" project-jdk-name="19" project-jdk-type="JavaSDK">

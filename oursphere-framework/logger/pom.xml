@@ -11,7 +11,19 @@
 
     <groupId>com.theoyu.framework.logger</groupId>
     <artifactId>logger</artifactId>
+    <dependencies>
 
+        <!-- AOP 切面 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!-- common模块 -->
+        <dependency>
+            <groupId>com.theoyu.framework.common</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+    </dependencies>
     <properties>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
