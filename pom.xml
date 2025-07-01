@@ -38,6 +38,7 @@
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <spring-cloud.version>2022.0.0</spring-cloud.version>
         <jackson.version>2.16.1</jackson.version>
+        <mysql-connector-java.version>8.0.29</mysql-connector-java.version>
     </properties>
 
     <!-- 统一依赖管理 -->
@@ -97,6 +98,19 @@
                 <artifactId>logger</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
+            <!-- Mybatis -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <!-- MySQL  -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
