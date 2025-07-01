@@ -1,0 +1,51 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="HttpUrlsUsage" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+    <inspection_tool class="MaliciousLibrariesLocal" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="VulnerableCodeUsages" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="VulnerableLibrariesGlobal" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="VulnerableLibrariesLocal" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="isIgnoringEnabled" value="true" />
+      <option name="ignoredModules">
+        <list>
+          <option value="oursphere-auth" />
+          <option value="oursphere-auth" />
+          <option value="OurSphere 中的所有库" />
+          <option value="OurSphere 中的所有库" />
+          <option value="OurSphere 中的所有库" />
+          <option value="OurSphere 中的所有库" />
+          <option value="OurSphere 中的所有库" />
+          <option value="OurSphere 中的所有库" />
+          <option value="OurSphere 中的所有库" />
+        </list>
+      </option>
+      <option name="ignoredPackages">
+        <list>
+          <option value="com.jayway.jsonpath:json-path:2.7.0" />
+          <option value="org.springframework.boot:spring-boot-autoconfigure:3.0.2" />
+          <option value="ch.qos.logback:logback-classic:1.4.5" />
+          <option value="org.springframework:spring-webmvc:6.0.4" />
+          <option value="org.springframework.boot:spring-boot-autoconfigure:3.0.2" />
+          <option value="org.yaml:snakeyaml:1.33" />
+          <option value="org.springframework:spring-web:6.0.4" />
+          <option value="net.minidev:json-smart:2.4.8" />
+          <option value="org.apache.tomcat.embed:tomcat-embed-core:10.1.5" />
+        </list>
+      </option>
+      <option name="ignoredReasons">
+        <list>
+          <option value="不可利用" />
+          <option value="进行中" />
+          <option value="不可利用" />
+          <option value="不可利用" />
+          <option value="不可利用" />
+          <option value="不可利用" />
+          <option value="不可利用" />
+          <option value="不可利用" />
+          <option value="不可利用" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
