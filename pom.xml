@@ -39,6 +39,8 @@
         <spring-cloud.version>2022.0.0</spring-cloud.version>
         <jackson.version>2.16.1</jackson.version>
         <mysql-connector-java.version>8.0.29</mysql-connector-java.version>
+        <druid.version>1.2.21</druid.version>
+        <mybatis-generator-maven-plugin.version>1.3.5</mybatis-generator-maven-plugin.version>
     </properties>
 
     <!-- 统一依赖管理 -->
@@ -110,7 +112,12 @@
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
             </dependency>
-
+            <!-- Druid 数据库连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-3-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -118,6 +125,26 @@
         <!-- 统一插件管理 -->
         <pluginManagement>
             <plugins>
+                <!-- mybatis代码生成器 -->
+                <plugin>
+                    <groupId>org.mybatis.generator</groupId>
+                    <artifactId>mybatis-generator-maven-plugin</artifactId>
+                    <version>${mybatis-generator-maven-plugin.version}</version>
+                    <configuration>
+                        <!-- 允许移动生成的文件 -->
+                        <verbose>true</verbose>
+                        <!-- 允许覆盖生成的文件 -->
+                        <overwrite>true</overwrite>
+                    </configuration>
+                    <!-- 此插件需要连接数据库，所以需要依赖 MySQL 驱动 -->
+                    <dependencies>
+                        <dependency>
+                            <groupId>mysql</groupId>
+                            <artifactId>mysql-connector-java</artifactId>
+                            <version>${mysql-connector-java.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
