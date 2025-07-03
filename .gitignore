@@ -4,10 +4,12 @@ target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###
-.idea/
+/.idea/
 *.iws
 *.iml
 *.ipr
+### logs files ###
+/logs/
 
 ### Eclipse ###
 .apt_generated
@@ -33,3 +35,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
