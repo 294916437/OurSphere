@@ -2,6 +2,8 @@ package com.theoyu.oursphere.auth.controller;
 
 import com.theoyu.framework.logger.aspect.ApiOperationLog;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.theoyu.framework.common.response.Response;
 import java.time.LocalDateTime;
@@ -15,12 +17,9 @@ public class TestController {
         return Response.success("Hello,World!");
     }
 
-    @GetMapping("/test2")
+    @PostMapping("/test2")
     @ApiOperationLog(description = "测试接口2")
-    public Response<User> test2() {
-        return Response.success(User.builder()
-                .nickName("犬小哈")
-                .createTime(LocalDateTime.now())
-                .build());
+    public Response<User> test2(@RequestBody User user) {
+        return Response.success(user);
     }
 }

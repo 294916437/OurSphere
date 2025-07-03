@@ -4,7 +4,14 @@
     <file url="file://$PROJECT_DIR$/oursphere-auth/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/oursphere-auth/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/oursphere-framework/common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/oursphere-framework/common/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/oursphere-framework/jackson/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/oursphere-framework/jackson/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/oursphere-framework/logger/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/oursphere-framework/logger/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/oursphere-framework/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/oursphere-framework/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>
 </project>

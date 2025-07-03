@@ -71,10 +71,17 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
+            </dependency>
+            <!-- Jackson 组件 -->
+            <dependency>
+                <groupId>com.theoyu.framework.jackson</groupId>
+                <artifactId>jackson</artifactId>
+                <version>1.0-SNAPSHOT</version>
             </dependency>
             <!-- Jackson -->
             <dependency>
@@ -82,7 +89,7 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
-
+            <!-- Jackson Core -->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-core</artifactId>

@@ -26,6 +26,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Jackson 组件 -->
+        <dependency>
+            <groupId>com.theoyu.framework.jackson</groupId>
+            <artifactId>jackson</artifactId>
+        </dependency>
         <!-- common模块 -->
         <dependency>
             <groupId>com.theoyu.framework.common</groupId>
