@@ -12,7 +12,10 @@ import java.util.concurrent.ThreadPoolExecutor;
  * This configuration sets up a thread pool with specific parameters
  * to manage concurrent authentication requests efficiently.
  */
+@Configuration
 public class ThreadPoolConfig {
+
+    @Bean(name = "taskExecutor")
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);

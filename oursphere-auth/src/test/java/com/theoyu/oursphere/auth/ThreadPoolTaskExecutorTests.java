@@ -17,6 +17,6 @@ public class ThreadPoolTaskExecutorTests {
      */
     @Test
     void testSubmit() {
-        threadPoolTaskExecutor.submit(() -> log.info("异步线程中说: 犬小哈专栏"));
+        threadPoolTaskExecutor.submit(() -> log.info("执行异步线程"));
     }
 }

@@ -2,6 +2,10 @@ logging:
   level:
     com.theoyu.oursphere.auth.domain.mapper: debug
 
+aliyun:
+  accessKeyId: LTAI5tNcJWpp841Gu1oJKx4t
+  accessKeySecret: YagN1yqAVflE1JuLG88puvR1SBitkc
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver # 指定数据库驱动类
