@@ -12,8 +12,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.YearMonthSerializer;
-import com.theoyu.framework.common.constant.DateConstants;
-import com.theoyu.framework.common.util.JsonUtils;
+import com.theoyu.framework.common.constants.DateConstants;
+import com.theoyu.framework.common.utils.JsonUtils;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 

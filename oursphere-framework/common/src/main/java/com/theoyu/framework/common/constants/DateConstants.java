@@ -1,4 +1,4 @@
-package com.theoyu.framework.common.constant;
+package com.theoyu.framework.common.constants;
 
 import java.time.format.DateTimeFormatter;
 

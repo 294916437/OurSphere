@@ -1,7 +1,7 @@
 
 package com.theoyu.framework.logger.aspect;
 
-import com.theoyu.framework.common.util.JsonUtils;
+import com.theoyu.framework.common.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

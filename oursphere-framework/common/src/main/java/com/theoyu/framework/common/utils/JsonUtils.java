@@ -1,4 +1,4 @@
-package com.theoyu.framework.common.util;
+package com.theoyu.framework.common.utils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

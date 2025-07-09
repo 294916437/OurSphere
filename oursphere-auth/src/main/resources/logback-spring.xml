@@ -3,7 +3,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
 
     <!-- 应用名称 -->
-    <property scope="context" name="appName" value="auth"/>
+    <property scope="context" name="appName" value="oursphere"/>
     <!-- 自定义日志输出路径，以及日志名称前缀 -->
     <property name="LOG_FILE" value="./logs/${appName}.%d{yyyy-MM-dd}"/>
     <!-- 每行日志输出的格式 -->
@@ -36,20 +36,20 @@
         <queueSize>256</queueSize>
         <appender-ref ref="FILE"/>
     </appender>
-    <!-- 本地 dev 开发环境 -->
+    <!-- 开发环境 -->
     <springProfile name="dev">
         <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
         <root level="INFO">
             <appender-ref ref="CONSOLE"/> <!-- 输出控制台日志 -->
-<!--            <appender-ref ref="ASYNC_FILE"/> -->
+<!--            <appender-ref ref="ASYNC_FILE"/>-->
         </root>
     </springProfile>
 
-    <!-- 其它环境 -->
+    <!-- 生产环境 -->
     <springProfile name="prod">
         <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
         <root level="INFO">
-            <appender-ref ref="ASYNC_FILE"/> <!-- 生产环境下，仅打印日志到文件中 -->
+            <appender-ref ref="ASYNC_FILE"/>
         </root>
     </springProfile>
 
