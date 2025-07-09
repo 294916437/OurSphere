@@ -44,12 +44,12 @@ public class VerificationCodeServiceImpl implements VerificationCodeService {
 
         //在异步线程池中调用阿里云短信服务发送验证码
         //TODO:阿里云暂时无法申请短信签名，因此这个接口当前仅用于测试，实际使用时需要替换为有效的短信签名和模板代码
-        threadPoolTaskExecutor.submit(() -> {
-            String signName = "阿里云短信测试";
-            String templateCode = "SMS_322255324";
-            String templateParam = String.format("{\"code\":\"%s\"}", verificationCode);
-            aliyunSmsHelper.sendTextMessage(signName, templateCode, phone, templateParam);
-        });
+//        threadPoolTaskExecutor.submit(() -> {
+//            String signName = "阿里云短信测试";
+//            String templateCode = "SMS_322255324";
+//            String templateParam = String.format("{\"code\":\"%s\"}", verificationCode);
+//            aliyunSmsHelper.sendTextMessage(signName, templateCode, phone, templateParam);
+//        });
 
         // 将验证码存入 Redis，设置过期时间为 5 分钟
         redisTemplate.opsForValue().set(redisKey, verificationCode,5, TimeUnit.MINUTES);

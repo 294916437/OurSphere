@@ -7,7 +7,7 @@ public class PhoneNumberValidator implements ConstraintValidator<PhoneNumber, St
 
     @Override
     public void initialize(PhoneNumber constraintAnnotation) {
-        // 这里进行一些初始化操作
+        // 初始化操作
     }
 
     @Override
