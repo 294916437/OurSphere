@@ -2,6 +2,8 @@ package com.theoyu.oursphere.auth.model.mapper;
 
 import com.theoyu.oursphere.auth.model.entity.RolePO;
 
+import java.util.List;
+
 public interface RolePOMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,4 +16,11 @@ public interface RolePOMapper {
     int updateByPrimaryKeySelective(RolePO record);
 
     int updateByPrimaryKey(RolePO record);
+
+    /**
+     * 查询全部启用的角色
+     *
+     * @return
+     */
+    List<RolePO> selectEnabledRoles();
 }

@@ -2,6 +2,8 @@ package com.theoyu.oursphere.auth.model.mapper;
 
 import com.theoyu.oursphere.auth.model.entity.PermissionPO;
 
+import java.util.List;
+
 public interface PermissionPOMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,4 +16,11 @@ public interface PermissionPOMapper {
     int updateByPrimaryKeySelective(PermissionPO record);
 
     int updateByPrimaryKey(PermissionPO record);
+
+    /**
+     * 查询全部启用的权限
+     *
+     * @return
+     */
+    List<PermissionPO> selectEnabledPermissions();
 }

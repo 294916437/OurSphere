@@ -1,6 +1,7 @@
 logging:
   level:
-    com.theoyu.oursphere.auth.domain.mapper: debug
+    com.theoyu.oursphere.auth.model.mapper: debug
+
 
 # 阿里云配置
 aliyun:

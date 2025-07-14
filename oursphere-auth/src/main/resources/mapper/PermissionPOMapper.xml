@@ -19,6 +19,11 @@
     id, parent_id, `name`, `type`, menu_url, menu_icon, sort, permission_key, `status`, 
     create_time, update_time, is_deleted
   </sql>
+  <select id="selectEnabledPermissions" resultMap="BaseResultMap">
+    select id, name, permission_key from t_permission
+    where status = 0 and is_deleted = 0 and type = 3
+  </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

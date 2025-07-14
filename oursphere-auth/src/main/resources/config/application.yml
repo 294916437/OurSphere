@@ -8,6 +8,7 @@ spring:
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
 
+
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:
   # token 名称（同时也是 cookie 名称）
