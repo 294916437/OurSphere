@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.theoyu.oursphere.auth.domain.mapper.UserDoMapper">
-  <resultMap id="BaseResultMap" type="com.theoyu.oursphere.auth.domain.dataobject.UserDo">
+<mapper namespace="com.theoyu.oursphere.auth.model.mapper.UserPOMapper">
+  <resultMap id="BaseResultMap" type="com.theoyu.oursphere.auth.model.entity.UserPO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="password" jdbcType="VARCHAR" property="password" />
@@ -18,7 +18,7 @@
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_id, `password`, nickname, avatar, birthday, background_img, phone, sex, 
+    id, user_id, `password`, nickname, avatar, birthday, background_img, phone, sex,
     `status`, introduction, create_time, update_time, is_deleted
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -27,11 +27,14 @@
     from t_user
     where id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="selectPwdByPhone" resultMap="BaseResultMap">
+    select id, password from t_user where phone = #{phone}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.theoyu.oursphere.auth.domain.dataobject.UserDo">
+  <insert id="insert" parameterType="com.theoyu.oursphere.auth.model.entity.UserPO" useGeneratedKeys="true" keyProperty="id">
     insert into t_user (id, user_id, `password`, 
       nickname, avatar, birthday, 
       background_img, phone, sex, 
@@ -43,7 +46,7 @@
       #{status,jdbcType=TINYINT}, #{introduction,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="com.theoyu.oursphere.auth.domain.dataobject.UserDo">
+  <insert id="insertSelective" parameterType="com.theoyu.oursphere.auth.model.entity.UserPO">
     insert into t_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -134,7 +137,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.theoyu.oursphere.auth.domain.dataobject.UserDo">
+  <update id="updateByPrimaryKeySelective" parameterType="com.theoyu.oursphere.auth.model.entity.UserPO">
     update t_user
     <set>
       <if test="userId != null">
@@ -179,7 +182,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.theoyu.oursphere.auth.domain.dataobject.UserDo">
+  <update id="updateByPrimaryKey" parameterType="com.theoyu.oursphere.auth.model.entity.UserPO">
     update t_user
     set user_id = #{userId,jdbcType=VARCHAR},
       `password` = #{password,jdbcType=VARCHAR},
@@ -196,4 +199,5 @@
       is_deleted = #{isDeleted,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
 </mapper>

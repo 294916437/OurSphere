@@ -1,0 +1,24 @@
+package com.theoyu.oursphere.auth.model.mapper;
+
+import com.theoyu.oursphere.auth.model.entity.UserPO;
+
+public interface UserPOMapper {
+    int deleteByPrimaryKey(Long id);
+
+    int insert(UserPO record);
+
+    int insertSelective(UserPO record);
+
+    UserPO selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(UserPO record);
+
+    int updateByPrimaryKey(UserPO record);
+
+    /**
+     * 根据手机号查询用户密码
+     * @param phone
+     * @return
+     */
+    UserPO selectPwdByPhone(String phone);
+}

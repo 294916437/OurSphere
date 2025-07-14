@@ -2,9 +2,16 @@ logging:
   level:
     com.theoyu.oursphere.auth.domain.mapper: debug
 
+# 阿里云配置
 aliyun:
   accessKeyId: LTAI5tNcJWpp841Gu1oJKx4t
   accessKeySecret: YagN1yqAVflE1JuLG88puvR1SBitkc
+
+# 雪花算法配置
+snowflake:
+  enabled: true
+  worker-id: 1
+  datacenter-id: 1
 
 spring:
   datasource:

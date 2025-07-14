@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
-@MapperScan("com.theoyu.oursphere.auth.domain.mapper")
+@MapperScan("com.theoyu.oursphere.auth.model.mapper")
 @SpringBootApplication
 public class OursphereAuthApplication {
 

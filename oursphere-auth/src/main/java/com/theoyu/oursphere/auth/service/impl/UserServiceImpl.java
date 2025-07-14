@@ -2,6 +2,7 @@ package com.theoyu.oursphere.auth.service.impl;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
+import com.google.common.base.Preconditions;
 import com.theoyu.framework.common.enums.DeletedEnum;
 import com.theoyu.framework.common.enums.StatusEnum;
 import com.theoyu.framework.common.response.Response;
@@ -53,9 +54,8 @@ public class UserServiceImpl implements UserService {
         if (loginTypeEnum == LoginTypeEnum.PHONE_CODE) {
             // 手机号+验证码登录
             String code = userLoginReqVO.getCode();
-            if(StringUtils.isBlank(code)) {
-                return Response.fail(ResponseCodeEnum.PARAM_NOT_VALID.getErrorCode(), "验证码不能为空");
-            }
+            // 校验入参验证码是否为空，抛出全局的IllegalArgumentException异常，可以在全局异常处理器中捕获并返回自定义的错误响应
+            Preconditions.checkArgument(StringUtils.isNotBlank(code), "验证码不能为空");
             // 通过手机号查询记录
             UserPO userPO = userPOMapper.selectPwdByPhone(phone);
             log.info("==> 用户是否注册, phone: {}, userPO: {}", phone, JsonUtils.toJsonString(userPO));
@@ -81,7 +81,6 @@ public class UserServiceImpl implements UserService {
      * @param phone
      * @return
      */
-
     @Transactional(rollbackFor = Exception.class)
     public String registerUser(String phone) {
         return transactionTemplate.execute(status -> {
@@ -101,7 +100,6 @@ public class UserServiceImpl implements UserService {
 
             // 添加入库
             userPOMapper.insert(userPO);
-
             // 获取刚刚添加入库的用户 ID
             Long id = userPO.getId();
 
