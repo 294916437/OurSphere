@@ -11,8 +11,10 @@ import com.theoyu.oursphere.auth.constants.RedisKeyConstants;
 import com.theoyu.oursphere.auth.constants.RoleConstants;
 import com.theoyu.oursphere.auth.enums.LoginTypeEnum;
 import com.theoyu.oursphere.auth.enums.ResponseCodeEnum;
+import com.theoyu.oursphere.auth.model.entity.RolePO;
 import com.theoyu.oursphere.auth.model.entity.UserPO;
 import com.theoyu.oursphere.auth.model.entity.UserRolePO;
+import com.theoyu.oursphere.auth.model.mapper.RolePOMapper;
 import com.theoyu.oursphere.auth.model.mapper.UserPOMapper;
 import com.theoyu.oursphere.auth.model.mapper.UserRolePOMapper;
 import com.theoyu.oursphere.auth.model.vo.user.UserLoginReqVO;
@@ -41,6 +43,8 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserRolePOMapper userRolePOMapper;
     @Resource
+    private RolePOMapper rolePOMapper;
+    @Resource
     private IdGeneratorHelper idGeneratorHelper;
     @Resource
     private TransactionTemplate transactionTemplate;
@@ -49,7 +53,7 @@ public class UserServiceImpl implements UserService {
         String phone = userLoginReqVO.getPhone();
         Integer type = userLoginReqVO.getType();
         LoginTypeEnum loginTypeEnum = LoginTypeEnum.valueOf(type);
-        String userId = null;
+        Long userId = null;
 
         if (loginTypeEnum == LoginTypeEnum.PHONE_CODE) {
             // 手机号+验证码登录
@@ -66,7 +70,7 @@ public class UserServiceImpl implements UserService {
                 userId = registerUser(phone);
             } else {
                 // 已注册，则获取其用户 ID
-                userId = userPO.getUserId();
+                userId = userPO.getId();
             }
         } else if (loginTypeEnum == LoginTypeEnum.ACCOUNT_PASSWORD) {
             // TODO:账号+密码登录
@@ -82,15 +86,15 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public String registerUser(String phone) {
+    public Long registerUser(String phone) {
         return transactionTemplate.execute(status -> {
             try {
             // 获取全局唯一的ID
-            String userId = idGeneratorHelper.generateStringId();
+            String userAppId = idGeneratorHelper.generateStringId();
 
             UserPO userPO = UserPO.builder()
                     .phone(phone)
-                    .userId(userId) // 自动生成的用户凭证，64bit
+                    .userId(userAppId) // 自动生成的用户凭证，64bit
                     .nickname("新用户") // 自动生成昵称
                     .status(StatusEnum.ENABLE.getValue()) // 状态为启用
                     .createTime(LocalDateTime.now())
@@ -101,22 +105,21 @@ public class UserServiceImpl implements UserService {
             // 添加入库
             userPOMapper.insert(userPO);
             // 获取刚刚添加入库的用户 ID
-            Long id = userPO.getId();
-
+            Long userId = userPO.getId();
             // 给该用户分配一个默认角色
             UserRolePO userRolePO = UserRolePO.builder()
-                    .userId(id)
+                    .userId(userId)
                     .roleId(RoleConstants.COMMON_USER_ROLE_ID)
                     .createTime(LocalDateTime.now())
                     .updateTime(LocalDateTime.now())
                     .isDeleted(DeletedEnum.NO.getValue())
                     .build();
             userRolePOMapper.insert(userRolePO);
-
+            RolePO rolePO = rolePOMapper.selectByPrimaryKey(RoleConstants.COMMON_USER_ROLE_ID);
             // 将该用户的角色存入 Redis 中
-            List<Long> roles = new ArrayList<>();
-            roles.add(RoleConstants.COMMON_USER_ROLE_ID);
-            String userRolesKey = RedisKeyConstants.buildUserRoleKey(phone);
+            List<String> roles = new ArrayList<>(1);
+            roles.add(rolePO.getRoleKey());
+            String userRolesKey = RedisKeyConstants.buildUserRoleKey(userId);
             redisTemplate.opsForValue().set(userRolesKey, JsonUtils.toJsonString(roles));
 
             return userId;

@@ -1,6 +1,7 @@
 package com.theoyu.oursphere.auth.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.theoyu.framework.common.response.Response;
 import com.theoyu.framework.logger.aspect.ApiOperationLog;
 import com.theoyu.oursphere.auth.model.vo.user.UserLoginReqVO;
@@ -23,5 +24,14 @@ public class UserController {
     @ApiOperationLog(description = "登录与注册")
     public Response<String> loginAndRegister(@RequestBody UserLoginReqVO userLoginReqVO) {
         return userService.loginAndRegister(userLoginReqVO);
+    }
+
+    @PostMapping("/logout")
+    @ApiOperationLog(description = "登出")
+    public Response<?> logout() {
+
+        // todo 账号退出登录逻辑待实现
+        StpUtil.logout();
+        return Response.success();
     }
 }

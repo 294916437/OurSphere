@@ -28,7 +28,7 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
   <select id="selectPwdByPhone" resultMap="BaseResultMap">
-    select id, password from t_user where phone = #{phone}
+    select id, user_id,password from t_user where phone = #{phone}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_user

@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -87,30 +86,30 @@ public class PushRolePermissions2RedisRunner implements ApplicationRunner {
                 );
 
                 // 角色ID-权限PO 对象的关系
-                Map<Long, List<PermissionPO>> roleIdPermissionDOMap = Maps.newHashMap();
+                Map<String, List<String>> roleIdPermissionMap = Maps.newHashMap();
 
                 // 遍历所有角色，
                 roles.forEach(rolePO -> {
                     // 当前角色 ID
                     Long roleId = rolePO.getId();
+                    // 当前角色 roleKey
+                    String roleKey = rolePO.getRoleKey();
                     // 当前角色 ID 对应的权限 ID 集合
                     List<Long> permissionIds = rolePermissionsMap.get(roleId);
                     if (CollUtil.isNotEmpty(permissionIds)) {
-                        List<PermissionPO> perDOS = Lists.newArrayList();
+                        List<String> permissionKeys  = Lists.newArrayList();
                         permissionIds.forEach(permissionId -> {
                             // 根据权限 ID 获取具体的权限 DO 对象
                             PermissionPO permissionDO = permissionsMap.get(permissionId);
-                            if (Objects.nonNull(permissionDO)) {
-                                perDOS.add(permissionDO);
-                            }
+                            permissionKeys.add(permissionDO.getPermissionKey());
                         });
-                        roleIdPermissionDOMap.put(roleId, perDOS);
+                        roleIdPermissionMap.put(roleKey, permissionKeys);
                     }
                 });
 
                 //实现Redis缓存
-                roleIdPermissionDOMap.forEach((roleId, permissions) -> {
-                    String key = RedisKeyConstants.buildRolePermissionsKey(roleId);
+                roleIdPermissionMap.forEach((roleKey, permissions) -> {
+                    String key = RedisKeyConstants.buildRolePermissionsKey(roleKey);
                     redisTemplate.opsForValue().set(key, JsonUtils.toJsonString(permissions));
                 });
 
