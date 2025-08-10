@@ -27,18 +27,13 @@ public class SaTokenConfig {
 
                     // 权限认证 -- 不同模块, 校验不同权限
                     // SaRouter.match("/auth/user/logout", r -> StpUtil.checkPermission("user"));
-                    // SaRouter.match("/auth/user/logout", r -> StpUtil.checkRole("admin"));
-                    SaRouter.match("/auth/user/logout", r -> StpUtil.checkPermission("app:note:publish"));
+                     SaRouter.match("/auth/user/logout", r -> StpUtil.checkRole("admin"));
                     // SaRouter.match("/user/**", r -> StpUtil.checkPermission("user"));
                     // SaRouter.match("/admin/**", r -> StpUtil.checkPermission("admin"));
                     // SaRouter.match("/goods/**", r -> StpUtil.checkPermission("goods"));
                     // SaRouter.match("/orders/**", r -> StpUtil.checkPermission("orders"));
 
                     // 更多匹配 ...  */
-                })
-                // 异常处理方法：每次setAuth函数出现异常时进入
-                .setError(e -> {
-                    return SaResult.error(e.getMessage());
                 })
                 ;
     }
