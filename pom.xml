@@ -49,6 +49,7 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <dysmsapi.version>4.1.2</dysmsapi.version>
         <nacos-config.version>0.3.0-RC</nacos-config.version>
+        <transmittable-thread-local.version>2.14.2</transmittable-thread-local.version>
     </properties>
 
     <!-- 统一依赖管理 -->
@@ -108,6 +109,12 @@
                 <groupId>com.theoyu.framework.common</groupId>
                 <artifactId>common</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <!-- Context 组件版本管理 -->
+            <dependency>
+                <groupId>com.theoyu.framework.context</groupId>
+                <artifactId>context</artifactId>
+                <version>1.0-SNAPSHOT</version>
             </dependency>
             <!-- 业务接口日志组件 -->
             <dependency>
@@ -180,6 +187,12 @@
                 <groupId>com.alibaba.boot</groupId>
                 <artifactId>nacos-config-spring-boot-starter</artifactId>
                 <version>${nacos-config.version}</version>
+            </dependency>
+            <!-- 多线程变量 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>transmittable-thread-local</artifactId>
+                <version>${transmittable-thread-local.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

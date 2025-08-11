@@ -17,6 +17,7 @@
         <module>common</module>
         <module>logger</module>
         <module>jackson</module>
+        <module>context</module>
     </modules>
 
 </project>

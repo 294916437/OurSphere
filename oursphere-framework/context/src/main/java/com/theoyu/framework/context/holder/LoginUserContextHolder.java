@@ -1,17 +1,20 @@
-package com.theoyu.oursphere.auth.filter;
+package com.theoyu.framework.context.holder;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
 import com.theoyu.framework.common.constants.GlobalConstants;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * @description: 登录用户上下文
+ **/
 public class LoginUserContextHolder {
 
     // 初始化一个 ThreadLocal 变量
     private static final ThreadLocal<Map<String, Object>> LOGIN_USER_CONTEXT_THREAD_LOCAL
-            = ThreadLocal.withInitial(HashMap::new);
-
+            = TransmittableThreadLocal.withInitial(HashMap::new);
 
     /**
      * 设置用户 ID
