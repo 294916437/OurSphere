@@ -1,6 +1,8 @@
 package com.theoyu.oursphere.gateway.exception;
 
 
+import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotPermissionException;
 import cn.dev33.satoken.exception.SaTokenException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.theoyu.framework.common.response.Response;
@@ -34,12 +36,17 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         // 响应参数
         Response<?> result;
         // 根据捕获的异常类型，设置不同的响应状态码和响应消息
-        if (ex instanceof SaTokenException) {
+        if (ex instanceof NotLoginException) { // 未登录异常
+            // 设置 401 状态码
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            // 构建响应结果
+            result = Response.fail(ResponseCodeEnum.UNAUTHORIZED.getErrorCode(), ex.getMessage());
+        } else if (ex instanceof NotPermissionException) { // 无权限异常
             // 权限认证失败时，设置 401 状态码
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             // 构建响应结果
             result = Response.fail(ResponseCodeEnum.UNAUTHORIZED.getErrorCode(), ResponseCodeEnum.UNAUTHORIZED.getErrorMessage());
-        } else { // 其他异常
+        } else { // 其他异常，则统一提示 “系统繁忙” 错误
             result = Response.fail(ResponseCodeEnum.SYSTEM_ERROR);
         }
 

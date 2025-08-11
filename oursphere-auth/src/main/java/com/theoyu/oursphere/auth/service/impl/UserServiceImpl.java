@@ -10,7 +10,6 @@ import com.theoyu.framework.common.utils.JsonUtils;
 import com.theoyu.oursphere.auth.constants.RedisKeyConstants;
 import com.theoyu.oursphere.auth.constants.RoleConstants;
 import com.theoyu.oursphere.auth.enums.LoginTypeEnum;
-import com.theoyu.oursphere.auth.enums.ResponseCodeEnum;
 import com.theoyu.oursphere.auth.model.entity.RolePO;
 import com.theoyu.oursphere.auth.model.entity.UserPO;
 import com.theoyu.oursphere.auth.model.entity.UserRolePO;
@@ -20,6 +19,7 @@ import com.theoyu.oursphere.auth.model.mapper.UserRolePOMapper;
 import com.theoyu.oursphere.auth.model.vo.user.UserLoginReqVO;
 import com.theoyu.oursphere.auth.service.UserService;
 import com.theoyu.oursphere.auth.utils.generator.IdGeneratorHelper;
+import com.theoyu.oursphere.auth.filter.LoginUserContextHolder;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -80,6 +80,23 @@ public class UserServiceImpl implements UserService {
         SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
         return Response.success(tokenInfo.tokenValue);
     }
+
+    /**
+     * 退出登录
+     *
+     * @return
+     */
+    @Override
+    public Response<?> logout() {
+        Long userId = LoginUserContextHolder.getUserId();
+
+        log.info("==> 用户退出登录, userId: {}", userId);
+
+        // 退出登录 (指定用户 ID)
+        StpUtil.logout(userId);
+        return Response.success();
+    }
+
     /**
      * 系统自动注册用户
      * @param phone
