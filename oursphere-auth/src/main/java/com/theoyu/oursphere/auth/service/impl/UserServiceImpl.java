@@ -3,6 +3,7 @@ package com.theoyu.oursphere.auth.service.impl;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import com.google.common.base.Preconditions;
+import com.theoyu.framework.common.exception.BusinessException;
 import com.theoyu.framework.context.holder.LoginUserContextHolder;
 import com.theoyu.framework.common.enums.DeletedEnum;
 import com.theoyu.framework.common.enums.StatusEnum;
@@ -11,6 +12,7 @@ import com.theoyu.framework.common.utils.JsonUtils;
 import com.theoyu.oursphere.auth.constants.RedisKeyConstants;
 import com.theoyu.oursphere.auth.constants.RoleConstants;
 import com.theoyu.oursphere.auth.enums.LoginTypeEnum;
+import com.theoyu.oursphere.auth.enums.ResponseCodeEnum;
 import com.theoyu.oursphere.auth.model.entity.RolePO;
 import com.theoyu.oursphere.auth.model.entity.UserPO;
 import com.theoyu.oursphere.auth.model.entity.UserRolePO;
@@ -18,12 +20,14 @@ import com.theoyu.oursphere.auth.model.mapper.RolePOMapper;
 import com.theoyu.oursphere.auth.model.mapper.UserPOMapper;
 import com.theoyu.oursphere.auth.model.mapper.UserRolePOMapper;
 import com.theoyu.oursphere.auth.model.vo.user.UserLoginReqVO;
+import com.theoyu.oursphere.auth.model.vo.user.UserPasswordReqVO;
 import com.theoyu.oursphere.auth.service.UserService;
 import com.theoyu.oursphere.auth.utils.generator.IdGeneratorHelper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -43,6 +47,8 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserRolePOMapper userRolePOMapper;
     @Resource
+    private PasswordEncoder passwordEncoder;
+    @Resource
     private RolePOMapper rolePOMapper;
     @Resource
     private IdGeneratorHelper idGeneratorHelper;
@@ -53,6 +59,12 @@ public class UserServiceImpl implements UserService {
         String phone = userLoginReqVO.getPhone();
         Integer type = userLoginReqVO.getType();
         LoginTypeEnum loginTypeEnum = LoginTypeEnum.valueOf(type);
+
+        // 登录类型错误
+        if (Objects.isNull(loginTypeEnum)) {
+            throw new BusinessException(ResponseCodeEnum.LOGIN_TYPE_ERROR);
+        }
+
         Long userId = null;
 
         if (loginTypeEnum == LoginTypeEnum.PHONE_CODE) {
@@ -66,14 +78,35 @@ public class UserServiceImpl implements UserService {
 
             // 判断是否注册
             if (Objects.isNull(userPO)) {
-                // TODO:系统自动注册该用户
+                // 系统自动注册该用户
                 userId = registerUser(phone);
             } else {
                 // 已注册，则获取其用户 ID
                 userId = userPO.getId();
             }
         } else if (loginTypeEnum == LoginTypeEnum.ACCOUNT_PASSWORD) {
-            // TODO:账号+密码登录
+            // 账号+密码登录
+            String password = userLoginReqVO.getPassword();
+            // 根据手机号查询
+            UserPO userPO1 = userPOMapper.selectPwdByPhone(phone);
+
+            // 判断该手机号是否注册
+            if (Objects.isNull(userPO1)) {
+                throw new BusinessException(ResponseCodeEnum.USER_NOT_FOUND);
+            }
+
+            // 拿到密文密码
+            String encodePassword = userPO1.getPassword();
+
+            // 匹配密码是否一致
+            boolean isPasswordCorrect = passwordEncoder.matches(password, encodePassword);
+
+            // 如果不正确，则抛出业务异常，提示用户名或者密码不正确
+            if (!isPasswordCorrect) {
+                throw new BusinessException(ResponseCodeEnum.PHONE_OR_PASSWORD_ERROR);
+            }
+
+            userId = userPO1.getId();
 
         }
         StpUtil.login(userId);
@@ -95,6 +128,29 @@ public class UserServiceImpl implements UserService {
         // 退出登录 (指定用户 ID)
         StpUtil.logout(userId);
         return Response.success();
+    }
+
+    @Override
+    public Response<?> updatePassword(UserPasswordReqVO updatePasswordReqVO) {
+        // 新密码
+        String newPassword = updatePasswordReqVO.getNewPassword();
+        // 密码加密
+        String encodePassword = passwordEncoder.encode(newPassword);
+
+        // 获取当前请求对应的用户 ID
+        Long userId = LoginUserContextHolder.getUserId();
+
+        UserPO userPO = UserPO.builder()
+                .id(userId)
+                .password(encodePassword)
+                .updateTime(LocalDateTime.now())
+                .build();
+        // 更新密码
+        userPOMapper.updateByPrimaryKeySelective(userPO);
+
+        return Response.success();
+
+
     }
 
     /**
