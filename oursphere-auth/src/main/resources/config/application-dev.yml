@@ -5,8 +5,8 @@ logging:
 
 # 阿里云配置
 aliyun:
-  accessKeyId: LTAI5tNcJWpp841Gu1oJKx4t
-  accessKeySecret: YagN1yqAVflE1JuLG88puvR1SBitkc
+  accessKeyId:
+  accessKeySecret:
 
 # 雪花算法配置
 snowflake:
