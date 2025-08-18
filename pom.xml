@@ -19,6 +19,7 @@
         <module>oursphere-auth</module>
         <module>oursphere-framework</module>
         <module>oursphere-gateway</module>
+        <module>oursphere-oss</module>
     </modules>
 
     <properties>

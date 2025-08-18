@@ -7,7 +7,6 @@
         <groupId>com.theoyu</groupId>
         <artifactId>oursphere</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>oursphere-auth</artifactId>
     <version>0.0.1-SNAPSHOT</version>

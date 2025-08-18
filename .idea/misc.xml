@@ -9,6 +9,8 @@
         <option value="$PROJECT_DIR$/oursphere-framework/common/pom.xml" />
         <option value="$PROJECT_DIR$/oursphere-framework/logger/pom.xml" />
         <option value="$PROJECT_DIR$/oursphere-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-oss/oursphere-oss-biz/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-oss/oursphere-oss-api/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
