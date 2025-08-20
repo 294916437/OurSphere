@@ -10,8 +10,8 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
 
     // ----------- 通用异常状态码 -----------
     SYSTEM_ERROR("OSS-10000", "系统错误，请稍后尝试..."),
-    PARAM_NOT_VALID("OSS-10001", "参数错误");
-
+    PARAM_NOT_VALID("OSS-10001", "参数错误"),
+    MAX_FILE_SIZE_EXCEEDED("OSS-10003", "文件大小超过限制，最大允许10MB");
 
     // 异常码，用于表示微服务和错误类型
     private final String errorCode;

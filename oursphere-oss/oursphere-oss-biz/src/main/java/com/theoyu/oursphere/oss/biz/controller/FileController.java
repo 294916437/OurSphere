@@ -1,6 +1,9 @@
 package com.theoyu.oursphere.oss.biz.controller;
 
+import com.theoyu.framework.common.constants.GlobalConstants;
+import com.theoyu.framework.common.exception.BusinessException;
 import com.theoyu.framework.common.response.Response;
+import com.theoyu.oursphere.oss.biz.enums.ResponseCodeEnum;
 import com.theoyu.oursphere.oss.biz.service.FileService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +23,10 @@ public class FileController {
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response<?> uploadFile(@RequestPart(value = "file") MultipartFile file) {
+        //控制器层面校验文件大小
+        if (file.getSize() > GlobalConstants.MAX_FILE_SIZE) {
+            throw new BusinessException(ResponseCodeEnum.MAX_FILE_SIZE_EXCEEDED);
+        }
         return fileService.uploadFile(file);
     }
 }

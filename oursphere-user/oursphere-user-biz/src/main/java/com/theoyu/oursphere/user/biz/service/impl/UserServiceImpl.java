@@ -1,14 +1,18 @@
 package com.theoyu.oursphere.user.biz.service.impl;
 
 import com.alibaba.nacos.shaded.com.google.common.base.Preconditions;
+import com.theoyu.framework.common.constants.GlobalConstants;
+import com.theoyu.framework.common.exception.BusinessException;
 import com.theoyu.framework.common.response.Response;
 import com.theoyu.framework.common.utils.ParamUtils;
 import com.theoyu.framework.context.holder.LoginUserContextHolder;
+import com.theoyu.oursphere.oss.api.FileFeignApi;
 import com.theoyu.oursphere.user.biz.enums.ResponseCodeEnum;
 import com.theoyu.oursphere.user.biz.enums.SexEnum;
 import com.theoyu.oursphere.user.biz.model.entity.UserPO;
 import com.theoyu.oursphere.user.biz.model.mapper.UserPOMapper;
 import com.theoyu.oursphere.user.biz.model.vo.UpdateUserInfoReqVO;
+import com.theoyu.oursphere.user.biz.rpc.OssRpcService;
 import com.theoyu.oursphere.user.biz.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +29,8 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
     @Resource
     private UserPOMapper userPOMapper;
+    @Resource
+    private OssRpcService ossRpcService;
 
     @Override
     public Response<?> updateUserInfo(UpdateUserInfoReqVO updateUserInfoReqVO) {
@@ -38,9 +44,28 @@ public class UserServiceImpl implements UserService {
         MultipartFile avatarFile = updateUserInfoReqVO.getAvatar();
 
         if (Objects.nonNull(avatarFile)) {
-            // todo: 调用对象存储服务上传文件
+            if(avatarFile.getSize() > GlobalConstants.MAX_FILE_SIZE) {
+                throw new BusinessException(ResponseCodeEnum.MAX_FILE_SIZE_EXCEEDED);
+            }
+            String avatarUrl = ossRpcService.uploadFile(avatarFile);
+            log.info("==> 上传头像成功，头像地址：{}", avatarUrl);
+            if(StringUtils.isBlank(avatarUrl)) {
+                throw new BusinessException(ResponseCodeEnum.UPLOAD_AVATAR_FAIL);
+            }
+            userPO.setAvatar(avatarUrl);
+            needUpdate = true;
         }
-
+        // 背景图
+        MultipartFile backgroundImgFile = updateUserInfoReqVO.getBackgroundImg();
+        if (Objects.nonNull(backgroundImgFile)) {
+            String backgroundImgUrl = ossRpcService.uploadFile(backgroundImgFile);
+            log.info("==> 上传背景图成功，背景图地址：{}", backgroundImgUrl);
+            if(StringUtils.isBlank(backgroundImgUrl)) {
+                throw new BusinessException(ResponseCodeEnum.UPLOAD_BACKGROUND_IMG_FAIL);
+            }
+            userPO.setBackgroundImg(backgroundImgUrl);
+            needUpdate = true;
+        }
         // 昵称
         String nickname = updateUserInfoReqVO.getNickname();
         if (StringUtils.isNotBlank(nickname)) {
@@ -80,11 +105,7 @@ public class UserServiceImpl implements UserService {
             needUpdate = true;
         }
 
-        // 背景图
-        MultipartFile backgroundImgFile = updateUserInfoReqVO.getBackgroundImg();
-        if (Objects.nonNull(backgroundImgFile)) {
-            // todo: 调用对象存储服务上传文件
-        }
+
 
         if (needUpdate) {
             // 更新用户信息

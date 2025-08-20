@@ -20,7 +20,14 @@
             <groupId>com.theoyu.framework.common</groupId>
             <artifactId>common</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.theoyu.framework.jackson</groupId>
+            <artifactId>jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.theoyu.framework.logger</groupId>
+            <artifactId>logger</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -53,6 +60,15 @@
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
+        </dependency>
+        <!-- OpenFeign -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.theoyu</groupId>
+            <artifactId>oursphere-oss-api</artifactId>
         </dependency>
 
     </dependencies>

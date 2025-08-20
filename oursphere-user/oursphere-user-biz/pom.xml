@@ -76,6 +76,11 @@
             <groupId>com.theoyu.framework.jackson</groupId>
             <artifactId>jackson</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.theoyu</groupId>
+            <artifactId>oursphere-oss-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

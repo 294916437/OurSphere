@@ -11,4 +11,6 @@ public interface GlobalConstants {
      * Minio 存储桶名称
      */
     String BUCKET_NAME = "oursphere";
+
+    Long MAX_FILE_SIZE = (long) (10 * 1024 * 1024); // 最大文件大小限制
 }
