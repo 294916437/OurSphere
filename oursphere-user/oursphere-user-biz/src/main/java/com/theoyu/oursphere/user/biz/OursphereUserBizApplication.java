@@ -8,7 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @MapperScan("com.theoyu.oursphere.user.biz.model.mapper")
 @EnableFeignClients(basePackages = {
-        "com.theoyu.oursphere.oss.api",  // 扫描OSS API包，用于发现OpenFeign客户端
+        "com.theoyu.oursphere.oss.api",  // 扫描OSS API，用于发现OpenFeign客户端
 })
 public class OursphereUserBizApplication {
 

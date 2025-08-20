@@ -6,17 +6,6 @@ spring:
     active: dev
 
 
-mybatis:
-  mapper-locations: classpath:/mapper/**/*.xml
-
-rate-limit:
-  api:
-    limit: 100 # 接口限流阈值
-
-
-alarm:
-  type: sms # 告警类型
-
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:
   # token 名称（同时也是 cookie 名称）

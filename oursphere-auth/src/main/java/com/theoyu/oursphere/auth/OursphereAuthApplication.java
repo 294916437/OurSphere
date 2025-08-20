@@ -1,12 +1,11 @@
 package com.theoyu.oursphere.auth;
 
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
-
-@MapperScan("com.theoyu.oursphere.auth.model.mapper")
+@EnableFeignClients(basePackages = "com.theoyu.oursphere.user.api")// 扫描USER API，用于发现OpenFeign客户端
 @SpringBootApplication
 public class OursphereAuthApplication {
 

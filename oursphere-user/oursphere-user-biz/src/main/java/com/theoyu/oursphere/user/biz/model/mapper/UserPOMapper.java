@@ -20,5 +20,5 @@ public interface UserPOMapper {
      * @param phone
      * @return
      */
-    UserPO selectPwdByPhone(String phone);
+    UserPO selectByPhone(String phone);
 }

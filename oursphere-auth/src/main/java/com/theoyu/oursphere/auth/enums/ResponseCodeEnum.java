@@ -19,7 +19,9 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     // ----------- 用户登陆状态码 -----------
     LOGIN_TYPE_ERROR("AUTH-20002", "登录类型错误"),
     USER_NOT_FOUND("AUTH-20003", "该用户不存在"),
-    PHONE_OR_PASSWORD_ERROR("AUTH-20004", "手机号或密码错误");
+    PHONE_OR_PASSWORD_ERROR("AUTH-20004", "手机号或密码错误"),
+    LOGIN_FAIL("AUTH-20005", "登录失败"),
+    ;
     // 异常码，用于表示微服务和错误类型
     private final String errorCode;
     // 错误信息，展示错误的详细信息

@@ -2,26 +2,44 @@ package com.theoyu.oursphere.user.biz.service.impl;
 
 import com.alibaba.nacos.shaded.com.google.common.base.Preconditions;
 import com.theoyu.framework.common.constants.GlobalConstants;
+import com.theoyu.framework.common.enums.DeletedEnum;
+import com.theoyu.framework.common.enums.StatusEnum;
 import com.theoyu.framework.common.exception.BusinessException;
 import com.theoyu.framework.common.response.Response;
+import com.theoyu.framework.common.utils.JsonUtils;
 import com.theoyu.framework.common.utils.ParamUtils;
 import com.theoyu.framework.context.holder.LoginUserContextHolder;
 import com.theoyu.oursphere.oss.api.FileFeignApi;
+import com.theoyu.oursphere.user.biz.constants.RedisKeyConstants;
+import com.theoyu.oursphere.user.biz.constants.RoleConstants;
 import com.theoyu.oursphere.user.biz.enums.ResponseCodeEnum;
 import com.theoyu.oursphere.user.biz.enums.SexEnum;
+import com.theoyu.oursphere.user.biz.model.entity.RolePO;
 import com.theoyu.oursphere.user.biz.model.entity.UserPO;
+import com.theoyu.oursphere.user.biz.model.entity.UserRolePO;
+import com.theoyu.oursphere.user.biz.model.mapper.RolePOMapper;
 import com.theoyu.oursphere.user.biz.model.mapper.UserPOMapper;
+import com.theoyu.oursphere.user.biz.model.mapper.UserRolePOMapper;
 import com.theoyu.oursphere.user.biz.model.vo.UpdateUserInfoReqVO;
 import com.theoyu.oursphere.user.biz.rpc.OssRpcService;
 import com.theoyu.oursphere.user.biz.service.UserService;
+import com.theoyu.oursphere.user.biz.utils.generator.IdGeneratorHelper;
+import com.theoyu.oursphere.user.dto.request.FindUserByPhoneReqDTO;
+import com.theoyu.oursphere.user.dto.request.RegisterUserReqDTO;
+import com.theoyu.oursphere.user.dto.request.UpdateUserPasswordReqDTO;
+import com.theoyu.oursphere.user.dto.response.FindUserByPhoneRspDTO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -31,7 +49,14 @@ public class UserServiceImpl implements UserService {
     private UserPOMapper userPOMapper;
     @Resource
     private OssRpcService ossRpcService;
-
+    @Resource
+    private UserRolePOMapper userRolePOMapper;
+    @Resource
+    private RolePOMapper rolePOMapper;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private IdGeneratorHelper idGeneratorHelper;
     @Override
     public Response<?> updateUserInfo(UpdateUserInfoReqVO updateUserInfoReqVO) {
         UserPO userPO = new UserPO();
@@ -109,6 +134,100 @@ public class UserServiceImpl implements UserService {
             userPO.setUpdateTime(LocalDateTime.now());
             userPOMapper.updateByPrimaryKeySelective(userPO);
         }
+        return Response.success();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Response<Long> register(RegisterUserReqDTO registerUserReqDTO) {
+        String phone = registerUserReqDTO.getPhone();
+
+        // 先判断该手机号是否已被注册
+        UserPO userPO1 = userPOMapper.selectByPhone(phone);
+
+        log.info("==> 用户是否注册, phone: {}, userPO: {}", phone, JsonUtils.toJsonString(userPO1));
+
+        // 若已注册，则直接返回用户 ID
+        if (Objects.nonNull(userPO1)) {
+            return Response.success(userPO1.getId());
+        }
+
+        // 否则注册新用户
+        String userAppId = idGeneratorHelper.generateStringId();;
+
+        UserPO userPO = UserPO.builder()
+                .phone(phone)
+                .userId(userAppId) // 自动生成的用户凭证
+                .nickname("新用户") // 自动生成昵称
+                .status(StatusEnum.ENABLE.getValue()) // 状态为启用
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .isDeleted(DeletedEnum.NO.getValue()) // 逻辑删除
+                .build();
+
+        // 添加入库
+        userPOMapper.insert(userPO);
+
+        // 获取刚刚添加入库的用户 ID
+        Long userId = userPO.getId();
+
+        // 给该用户分配一个默认角色
+        UserRolePO userRolePO = UserRolePO.builder()
+                .userId(userId)
+                .roleId(RoleConstants.COMMON_USER_ROLE_ID)
+                .createTime(LocalDateTime.now())
+                .updateTime(LocalDateTime.now())
+                .isDeleted(DeletedEnum.NO.getValue())
+                .build();
+        userRolePOMapper.insert(userRolePO);
+
+        RolePO rolePO = rolePOMapper.selectByPrimaryKey(RoleConstants.COMMON_USER_ROLE_ID);
+
+        // 将该用户的角色 ID 存入 Redis 中
+        List<String> roles = new ArrayList<>(1);
+        roles.add(rolePO.getRoleKey());
+
+        String userRolesKey = RedisKeyConstants.buildUserRoleKey(userId);
+        redisTemplate.opsForValue().set(userRolesKey, JsonUtils.toJsonString(roles));
+
+        return Response.success(userId);
+    }
+
+    @Override
+    public Response<FindUserByPhoneRspDTO> findByPhone(FindUserByPhoneReqDTO findUserByPhoneReqDTO) {
+        String phone = findUserByPhoneReqDTO.getPhone();
+
+        // 根据手机号查询用户信息
+        UserPO userPO = userPOMapper.selectByPhone(phone);
+
+        // 判空
+        if (Objects.isNull(userPO)) {
+            throw new BusinessException(ResponseCodeEnum.USER_NOT_FOUND);
+        }
+
+        // 构建返参
+        FindUserByPhoneRspDTO findUserByPhoneRspDTO = FindUserByPhoneRspDTO.builder()
+                .id(userPO.getId())
+                .password(userPO.getPassword())
+                .build();
+
+        return Response.success(findUserByPhoneRspDTO);
+
+    }
+
+    @Override
+    public Response<?> updatePassword(UpdateUserPasswordReqDTO updateUserPasswordReqDTO) {
+        // 获取当前请求对应的用户 ID
+        Long userId = LoginUserContextHolder.getUserId();
+
+        UserPO userPO = UserPO.builder()
+                .id(userId)
+                .password(updateUserPasswordReqDTO.getEncodePassword()) // 加密后的密码
+                .updateTime(LocalDateTime.now())
+                .build();
+        // 更新密码
+        userPOMapper.updateByPrimaryKeySelective(userPO);
+
         return Response.success();
     }
 }
