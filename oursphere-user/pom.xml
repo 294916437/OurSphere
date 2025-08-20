@@ -1,24 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <!-- 指定父项目 -->
     <parent>
         <groupId>com.theoyu</groupId>
         <artifactId>oursphere</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
-    <artifactId>oursphere-oss</artifactId>
-    <name>${project.artifactId}</name>
-    <description>对象存储服务</description>
     <packaging>pom</packaging>
+    <artifactId>oursphere-user</artifactId>
+    <name>${project.artifactId}</name>
+    <description>用户服务</description>
 
     <!-- 子模块管理 -->
     <modules>
-        <module>oursphere-oss-api</module>
-        <module>oursphere-oss-biz</module>
+        <module>oursphere-user-api</module>
+        <module>oursphere-user-biz</module>
     </modules>
 
-
 </project>
+

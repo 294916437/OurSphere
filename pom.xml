@@ -20,6 +20,7 @@
         <module>oursphere-framework</module>
         <module>oursphere-gateway</module>
         <module>oursphere-oss</module>
+        <module>oursphere-user</module>
     </modules>
 
     <properties>
