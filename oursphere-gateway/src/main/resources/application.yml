@@ -4,6 +4,12 @@ spring:
   cloud:
     gateway:
       routes:
+        - id: user
+          uri: lb://oursphere-user
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
         - id: auth
           uri: lb://oursphere-auth
           predicates:

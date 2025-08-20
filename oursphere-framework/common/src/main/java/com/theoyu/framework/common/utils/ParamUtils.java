@@ -40,12 +40,12 @@ public class ParamUtils {
     private static final String ID_REGEX = "^[a-zA-Z0-9_]+$";
 
     /**
-     * 用户 UID 校验
+     * 用户应用ID 校验
      *
      * @param userId
      * @return
      */
-    public static boolean checkUserId(String userId) {
+    public static boolean checkUserAppId(String userId) {
         // 检查长度
         if (userId.length() < ID_MIN_LENGTH || userId.length() > ID_MAX_LENGTH) {
             return false;
