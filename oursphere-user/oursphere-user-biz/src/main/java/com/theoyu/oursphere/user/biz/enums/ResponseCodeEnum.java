@@ -16,7 +16,8 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     SEX_VALID_FAIL("USER-20003", "性别错误"),
     INTRODUCTION_VALID_FAIL("USER-20004", "个人简介请设置1-100个字符"),
     UPLOAD_AVATAR_FAIL("USER-20005", "头像上传失败"),
-    UPLOAD_BACKGROUND_IMG_FAIL("USER-20006", "背景图上传失败");
+    UPLOAD_BACKGROUND_IMG_FAIL("USER-20006", "背景图上传失败"),
+    MAX_FILE_SIZE_EXCEEDED("USER-20007", "文件大小超过限制，最大允许10MB");
 
 
     // 异常码，用于表示微服务和错误类型

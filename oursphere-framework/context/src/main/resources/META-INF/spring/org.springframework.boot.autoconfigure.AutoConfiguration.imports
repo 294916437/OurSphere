@@ -1,1 +1,2 @@
 com.theoyu.framework.context.config.ContextAutoConfiguration
+com.theoyu.framework.context.config.FeignContextAutoConfiguration

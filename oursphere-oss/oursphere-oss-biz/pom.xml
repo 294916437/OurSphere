@@ -29,6 +29,14 @@
             <artifactId>logger</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.theoyu.framework.context</groupId>
+            <artifactId>context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.theoyu</groupId>
+            <artifactId>oursphere-oss-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
@@ -66,10 +74,7 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.theoyu</groupId>
-            <artifactId>oursphere-oss-api</artifactId>
-        </dependency>
+
 
     </dependencies>
 

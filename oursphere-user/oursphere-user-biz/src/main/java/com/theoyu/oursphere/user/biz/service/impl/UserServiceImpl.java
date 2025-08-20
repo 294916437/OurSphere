@@ -44,9 +44,6 @@ public class UserServiceImpl implements UserService {
         MultipartFile avatarFile = updateUserInfoReqVO.getAvatar();
 
         if (Objects.nonNull(avatarFile)) {
-            if(avatarFile.getSize() > GlobalConstants.MAX_FILE_SIZE) {
-                throw new BusinessException(ResponseCodeEnum.MAX_FILE_SIZE_EXCEEDED);
-            }
             String avatarUrl = ossRpcService.uploadFile(avatarFile);
             log.info("==> 上传头像成功，头像地址：{}", avatarUrl);
             if(StringUtils.isBlank(avatarUrl)) {
