@@ -5,6 +5,8 @@ spring:
   profiles:
     active: dev
 
+alarm:
+  type: sms # 告警类型
 
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:

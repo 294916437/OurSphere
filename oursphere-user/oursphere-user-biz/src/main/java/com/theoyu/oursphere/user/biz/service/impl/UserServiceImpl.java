@@ -57,6 +57,7 @@ public class UserServiceImpl implements UserService {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource
     private IdGeneratorHelper idGeneratorHelper;
+
     @Override
     public Response<?> updateUserInfo(UpdateUserInfoReqVO updateUserInfoReqVO) {
         UserPO userPO = new UserPO();
@@ -71,7 +72,7 @@ public class UserServiceImpl implements UserService {
         if (Objects.nonNull(avatarFile)) {
             String avatarUrl = ossRpcService.uploadFile(avatarFile);
             log.info("==> 上传头像成功，头像地址：{}", avatarUrl);
-            if(StringUtils.isBlank(avatarUrl)) {
+            if (StringUtils.isBlank(avatarUrl)) {
                 throw new BusinessException(ResponseCodeEnum.UPLOAD_AVATAR_FAIL);
             }
             userPO.setAvatar(avatarUrl);
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
         if (Objects.nonNull(backgroundImgFile)) {
             String backgroundImgUrl = ossRpcService.uploadFile(backgroundImgFile);
             log.info("==> 上传背景图成功，背景图地址：{}", backgroundImgUrl);
-            if(StringUtils.isBlank(backgroundImgUrl)) {
+            if (StringUtils.isBlank(backgroundImgUrl)) {
                 throw new BusinessException(ResponseCodeEnum.UPLOAD_BACKGROUND_IMG_FAIL);
             }
             userPO.setBackgroundImg(backgroundImgUrl);
@@ -128,7 +129,6 @@ public class UserServiceImpl implements UserService {
         }
 
 
-
         if (needUpdate) {
             // 更新用户信息
             userPO.setUpdateTime(LocalDateTime.now());
@@ -153,7 +153,8 @@ public class UserServiceImpl implements UserService {
         }
 
         // 否则注册新用户
-        String userAppId = idGeneratorHelper.generateStringId();;
+        String userAppId = idGeneratorHelper.generateStringId();
+        ;
 
         UserPO userPO = UserPO.builder()
                 .phone(phone)

@@ -1,4 +1,5 @@
 package com.theoyu.oursphere.user.biz.enums;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -6,7 +7,7 @@ import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
-public enum  SexEnum {
+public enum SexEnum {
     WOMAN(0),
     MAN(1);
 

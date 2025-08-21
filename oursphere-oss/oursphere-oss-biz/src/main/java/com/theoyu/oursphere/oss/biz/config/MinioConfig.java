@@ -1,4 +1,5 @@
 package com.theoyu.oursphere.oss.biz.config;
+
 import io.minio.MinioClient;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;

@@ -15,6 +15,7 @@ public interface UserService {
      * @return
      */
     Response<?> updateUserInfo(UpdateUserInfoReqVO updateUserInfoReqVO);
+
     /**
      * 用户注册
      *
@@ -22,6 +23,7 @@ public interface UserService {
      * @return
      */
     Response<Long> register(RegisterUserReqDTO registerUserReqDTO);
+
     /**
      * 根据手机号查询用户信息
      *
@@ -29,6 +31,7 @@ public interface UserService {
      * @return
      */
     Response<FindUserByPhoneRspDTO> findByPhone(FindUserByPhoneReqDTO findUserByPhoneReqDTO);
+
     /**
      * 更新密码
      *

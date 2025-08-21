@@ -12,53 +12,82 @@ import lombok.extern.slf4j.Slf4j;
 public class SnowFlake {
 
     // ==============================字段说明==============================
-    /** 开始时间戳 (2021-01-01 00:00:00) */
+    /**
+     * 开始时间戳 (2021-01-01 00:00:00)
+     */
     private final long twepoch = 1609459200000L;
 
-    /** 机器id所占的位数 */
+    /**
+     * 机器id所占的位数
+     */
     private final long workerIdBits = 5L;
 
-    /** 数据标识id所占的位数 */
+    /**
+     * 数据标识id所占的位数
+     */
     private final long datacenterIdBits = 5L;
 
-    /** 支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数) */
+    /**
+     * 支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
+     */
     private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
 
-    /** 支持的最大数据标识id，结果是31 */
+    /**
+     * 支持的最大数据标识id，结果是31
+     */
     private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
 
-    /** 序列在id中占的位数 */
+    /**
+     * 序列在id中占的位数
+     */
     private final long sequenceBits = 12L;
 
-    /** 机器ID向左移12位 */
+    /**
+     * 机器ID向左移12位
+     */
     private final long workerIdShift = sequenceBits;
 
-    /** 数据标识id向左移17位(12+5) */
+    /**
+     * 数据标识id向左移17位(12+5)
+     */
     private final long datacenterIdShift = sequenceBits + workerIdBits;
 
-    /** 时间戳向左移22位(5+5+12) */
+    /**
+     * 时间戳向左移22位(5+5+12)
+     */
     private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
 
-    /** 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095) */
+    /**
+     * 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095)
+     */
     private final long sequenceMask = -1L ^ (-1L << sequenceBits);
 
-    /** 工作机器ID(0~31) */
+    /**
+     * 工作机器ID(0~31)
+     */
     private long workerId;
 
-    /** 数据中心ID(0~31) */
+    /**
+     * 数据中心ID(0~31)
+     */
     private long datacenterId;
 
-    /** 毫秒内序列(0~4095) */
+    /**
+     * 毫秒内序列(0~4095)
+     */
     private long sequence = 0L;
 
-    /** 上次生成ID的时间戳 */
+    /**
+     * 上次生成ID的时间戳
+     */
     private long lastTimestamp = -1L;
 
     // ==============================构造函数==============================
 
     /**
      * 构造函数
-     * @param workerId 工作ID (0~31)
+     *
+     * @param workerId     工作ID (0~31)
      * @param datacenterId 数据中心ID (0~31)
      */
     public SnowFlake(long workerId, long datacenterId) {
@@ -86,6 +115,7 @@ public class SnowFlake {
 
     /**
      * 获得下一个ID (该方法是线程安全的)
+     *
      * @return SnowflakeId
      */
     public synchronized long nextId() {
@@ -140,6 +170,7 @@ public class SnowFlake {
 
     /**
      * 阻塞到下一个毫秒，直到获得新的时间戳
+     *
      * @param lastTimestamp 上次生成ID的时间戳
      * @return 当前时间戳
      */
@@ -153,6 +184,7 @@ public class SnowFlake {
 
     /**
      * 返回以毫秒为单位的当前时间
+     *
      * @return 当前时间(毫秒)
      */
     protected long timeGen() {
@@ -163,6 +195,7 @@ public class SnowFlake {
 
     /**
      * 解析雪花ID
+     *
      * @param id 雪花ID
      * @return ID信息
      */
@@ -191,10 +224,21 @@ public class SnowFlake {
             this.sequence = sequence;
         }
 
-        public long getTimestamp() { return timestamp; }
-        public long getDatacenterId() { return datacenterId; }
-        public long getWorkerId() { return workerId; }
-        public long getSequence() { return sequence; }
+        public long getTimestamp() {
+            return timestamp;
+        }
+
+        public long getDatacenterId() {
+            return datacenterId;
+        }
+
+        public long getWorkerId() {
+            return workerId;
+        }
+
+        public long getSequence() {
+            return sequence;
+        }
 
         @Override
         public String toString() {

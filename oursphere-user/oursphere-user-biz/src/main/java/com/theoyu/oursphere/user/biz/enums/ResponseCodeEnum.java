@@ -19,14 +19,13 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     UPLOAD_BACKGROUND_IMG_FAIL("USER-20006", "背景图上传失败"),
     MAX_FILE_SIZE_EXCEEDED("USER-20007", "文件大小超过限制，最大允许10MB"),
     USER_NOT_FOUND("USER-20007", "当前用户不存在"),
-            ;
+    ;
 
 
     // 异常码，用于表示微服务和错误类型
     private final String errorCode;
     // 错误信息，展示错误的详细信息
     private final String errorMessage;
-
 
 
 }

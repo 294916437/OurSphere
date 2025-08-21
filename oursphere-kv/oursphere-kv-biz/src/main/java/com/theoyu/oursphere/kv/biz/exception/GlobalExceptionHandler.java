@@ -1,8 +1,8 @@
-package com.theoyu.oursphere.user.biz.exception;
+package com.theoyu.oursphere.kv.biz.exception;
 
 import com.theoyu.framework.common.exception.BusinessException;
 import com.theoyu.framework.common.response.Response;
-import com.theoyu.oursphere.user.biz.enums.ResponseCodeEnum;
+import com.theoyu.oursphere.kv.biz.enums.ResponseCodeEnum;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Optional;
 
@@ -25,22 +24,6 @@ import java.util.Optional;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    /**
-     * 捕获文件上传大小超限异常
-     */
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK) // 返回200状态码，业务错误用业务状态码表示
-    public Response<Object> handleMaxUploadSizeExceededException(HttpServletRequest request, MaxUploadSizeExceededException e) {
-        // 获取最大允许大小
-        long maxSize = e.getMaxUploadSize();
-
-        log.warn("{} request failed, file size exceeded, maxSize: 10MB ",
-                request.getRequestURI());
-
-        return Response.fail(ResponseCodeEnum.MAX_FILE_SIZE_EXCEEDED.getErrorCode(),
-                "文件大小超出限制，最大允许上传 10MB 的文件");
-    }
 
     /**
      * 捕获自定义业务异常
@@ -104,11 +87,10 @@ public class GlobalExceptionHandler {
         log.error("{} request error, ", request.getRequestURI(), e);
         return Response.fail(ResponseCodeEnum.SYSTEM_ERROR);
     }
-
     /**
      * 捕获 guava 参数校验异常
      */
-    @ExceptionHandler({IllegalArgumentException.class})
+    @ExceptionHandler({ IllegalArgumentException.class })
     @ResponseBody
     public Response<Object> handleIllegalArgumentException(HttpServletRequest request, IllegalArgumentException e) {
         // 参数错误异常码
