@@ -3,6 +3,7 @@ package com.theoyu.oursphere.kv.biz.controller;
 import com.theoyu.framework.common.response.Response;
 import com.theoyu.oursphere.kv.biz.service.NoteContentService;
 import com.theoyu.oursphere.kv.dto.request.AddNoteContentReqDTO;
+import com.theoyu.oursphere.kv.dto.request.DeleteNoteContentReqDTO;
 import com.theoyu.oursphere.kv.dto.request.FindNoteContentReqDTO;
 import com.theoyu.oursphere.kv.dto.response.FindNoteContentRspDTO;
 import jakarta.annotation.Resource;
@@ -28,5 +29,9 @@ public class NoteContentController {
     @PostMapping(value = "/note/content/find")
     public Response<FindNoteContentRspDTO> findNoteContent(@Validated @RequestBody FindNoteContentReqDTO findNoteContentReqDTO) {
         return noteContentService.findNoteContent(findNoteContentReqDTO);
+    }
+    @PostMapping(value = "/note/content/delete")
+    public Response<?> deleteNoteContent(@Validated @RequestBody DeleteNoteContentReqDTO deleteNoteContentReqDTO) {
+        return noteContentService.deleteNoteContent(deleteNoteContentReqDTO);
     }
 }

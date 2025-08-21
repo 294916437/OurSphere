@@ -7,6 +7,7 @@ import com.theoyu.oursphere.kv.biz.model.entity.NoteContentPO;
 import com.theoyu.oursphere.kv.biz.model.repository.NoteContentRepository;
 import com.theoyu.oursphere.kv.biz.service.NoteContentService;
 import com.theoyu.oursphere.kv.dto.request.AddNoteContentReqDTO;
+import com.theoyu.oursphere.kv.dto.request.DeleteNoteContentReqDTO;
 import com.theoyu.oursphere.kv.dto.request.FindNoteContentReqDTO;
 import com.theoyu.oursphere.kv.dto.response.FindNoteContentRspDTO;
 import jakarta.annotation.Resource;
@@ -58,5 +59,15 @@ public class NoteContentServiceImpl implements NoteContentService {
                 .build();
 
         return Response.success(findNoteContentRspDTO);
+    }
+
+    @Override
+    public Response<?> deleteNoteContent(DeleteNoteContentReqDTO deleteNoteContentReqDTO) {
+        // 笔记 ID
+        String noteId = deleteNoteContentReqDTO.getNoteId();
+        // 删除笔记内容
+        noteContentRepository.deleteById(UUID.fromString(noteId));
+
+        return Response.success();
     }
 }
