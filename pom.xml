@@ -22,6 +22,7 @@
         <module>oursphere-oss</module>
         <module>oursphere-user</module>
         <module>oursphere-kv</module>
+        <module>oursphere-id-generator</module>
     </modules>
 
     <properties>

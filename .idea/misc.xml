@@ -16,6 +16,8 @@
         <option value="$PROJECT_DIR$/oursphere-user/oursphere-user-biz/pom.xml" />
         <option value="$PROJECT_DIR$/oursphere-kv/oursphere-kv-api/pom.xml" />
         <option value="$PROJECT_DIR$/oursphere-kv/oursphere-kv-biz/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-id-generator/oursphere-id-generator-api/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-id-generator/oursphere-id-generator-biz/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
