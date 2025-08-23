@@ -16,5 +16,7 @@
 
     <!-- 子模块管理 -->
     <modules>
+        <module>oursphere-id-generator-api</module>
+        <module>oursphere-id-generator-biz</module>
     </modules>
 </project>

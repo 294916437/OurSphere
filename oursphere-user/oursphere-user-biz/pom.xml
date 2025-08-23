@@ -20,7 +20,10 @@
             <groupId>com.theoyu.framework.common</groupId>
             <artifactId>common</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.theoyu</groupId>
+            <artifactId>oursphere-id-generator-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

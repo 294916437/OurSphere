@@ -10,7 +10,7 @@
     </parent>
     <packaging>jar</packaging>
 
-    <artifactId>xiaohashu-id-generator-api</artifactId>
+    <artifactId>oursphere-id-generator-api</artifactId>
     <name>${project.artifactId}</name>
     <description>RPC层, 供其他服务调用</description>
 

@@ -1,7 +1,6 @@
 package com.theoyu.oursphere.user.biz.service.impl;
 
 import com.alibaba.nacos.shaded.com.google.common.base.Preconditions;
-import com.theoyu.framework.common.constants.GlobalConstants;
 import com.theoyu.framework.common.enums.DeletedEnum;
 import com.theoyu.framework.common.enums.StatusEnum;
 import com.theoyu.framework.common.exception.BusinessException;
@@ -9,7 +8,6 @@ import com.theoyu.framework.common.response.Response;
 import com.theoyu.framework.common.utils.JsonUtils;
 import com.theoyu.framework.common.utils.ParamUtils;
 import com.theoyu.framework.context.holder.LoginUserContextHolder;
-import com.theoyu.oursphere.oss.api.FileFeignApi;
 import com.theoyu.oursphere.user.biz.constants.RedisKeyConstants;
 import com.theoyu.oursphere.user.biz.constants.RoleConstants;
 import com.theoyu.oursphere.user.biz.enums.ResponseCodeEnum;
@@ -22,6 +20,7 @@ import com.theoyu.oursphere.user.biz.model.mapper.UserPOMapper;
 import com.theoyu.oursphere.user.biz.model.mapper.UserRolePOMapper;
 import com.theoyu.oursphere.user.biz.model.vo.UpdateUserInfoReqVO;
 import com.theoyu.oursphere.user.biz.rpc.OssRpcService;
+import com.theoyu.oursphere.user.biz.rpc.idGeneratorRpcService;
 import com.theoyu.oursphere.user.biz.service.UserService;
 import com.theoyu.oursphere.user.biz.utils.generator.IdGeneratorHelper;
 import com.theoyu.oursphere.user.dto.request.FindUserByPhoneReqDTO;
@@ -45,6 +44,8 @@ import java.util.Objects;
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
+    @Resource
+    private idGeneratorRpcService idGeneratorRpcService;
     @Resource
     private UserPOMapper userPOMapper;
     @Resource
@@ -153,10 +154,11 @@ public class UserServiceImpl implements UserService {
         }
 
         // 否则注册新用户
-        String userAppId = idGeneratorHelper.generateStringId();
-        ;
-
+        String userAppId = idGeneratorRpcService.getUserAppId();
+        String userIdStr = idGeneratorRpcService.getUserId();
+        Long userId = Long.valueOf(userIdStr);
         UserPO userPO = UserPO.builder()
+                .id(userId)
                 .phone(phone)
                 .userId(userAppId) // 自动生成的用户凭证
                 .nickname("新用户") // 自动生成昵称
@@ -168,9 +170,6 @@ public class UserServiceImpl implements UserService {
 
         // 添加入库
         userPOMapper.insert(userPO);
-
-        // 获取刚刚添加入库的用户 ID
-        Long userId = userPO.getId();
 
         // 给该用户分配一个默认角色
         UserRolePO userRolePO = UserRolePO.builder()
