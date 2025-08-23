@@ -23,6 +23,7 @@
         <module>oursphere-user</module>
         <module>oursphere-kv</module>
         <module>oursphere-id-generator</module>
+        <module>oursphere-note</module>
     </modules>
 
     <properties>

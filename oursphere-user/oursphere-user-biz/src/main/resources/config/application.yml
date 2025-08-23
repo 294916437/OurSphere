@@ -2,8 +2,7 @@ server:
   tomcat:
     max-swallow-size: 20MB      # Tomcat最大请求体大小
     connection-timeout: 60000   # 连接超时
-  max-http-header-size: 10MB    # HTTP头最大大小
-  port: 8082 # 项目启动的端口
+  port: 8082 # 项目启动的端口F
 
 spring:
   servlet:
@@ -16,7 +15,5 @@ spring:
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
 
-storage:
-  type: minio # 对象存储类型
 
 

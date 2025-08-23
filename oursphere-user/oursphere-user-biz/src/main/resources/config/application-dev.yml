@@ -1,6 +1,6 @@
 logging:
   level:
-    com.theoyu.oursphere.auth.model.mapper: debug
+    com.theoyu.oursphere.user.model.mapper: debug
 
 storage:
   minio:

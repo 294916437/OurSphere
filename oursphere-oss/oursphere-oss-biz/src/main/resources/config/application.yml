@@ -2,7 +2,6 @@ server:
   tomcat:
     max-swallow-size: 20MB
     connection-timeout: 60000
-  max-http-header-size: 10MB
   port: 8081 # 项目启动的端口
 
 spring:
