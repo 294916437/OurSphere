@@ -9,7 +9,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @MapperScan("com.theoyu.oursphere.note.biz.model.mapper")
 @EnableFeignClients(basePackages = { // 扫描OSS API，用于发现OpenFeign客户端
         "com.theoyu.oursphere.kv.api",
-        "com.theoyu.oursphere.id.generator.api"
+        "com.theoyu.oursphere.id.generator.api",
+        "com.theoyu.oursphere.user.api",
 })
 public class OursphereNoteBizApplication {
 
