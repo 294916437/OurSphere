@@ -2,6 +2,8 @@ package com.theoyu.oursphere.user.biz.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.nacos.shaded.com.google.common.base.Preconditions;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.theoyu.framework.common.enums.DeletedEnum;
 import com.theoyu.framework.common.enums.StatusEnum;
 import com.theoyu.framework.common.exception.BusinessException;
@@ -62,6 +64,12 @@ public class UserServiceImpl implements UserService {
     private RedisTemplate<String, Object> redisTemplate;
     @Resource(name = "taskExecutor")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    private static final Cache<Long, FindUserByIdRspDTO> LOCAL_CACHE = Caffeine.newBuilder()
+            .initialCapacity(10000) // 设置初始容量为 10000 个条目
+            .maximumSize(10000) // 设置缓存的最大容量为 10000 个条目
+            .expireAfterWrite(1, TimeUnit.HOURS) // 设置缓存条目在写入后 1 小时过期
+            .build();
 
 
     @Override
@@ -239,7 +247,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response<FindUserByIdRspDTO> findById(FindUserByIdReqDTO findUserByIdReqDTO) {
         Long userId = findUserByIdReqDTO.getId();
-
+        FindUserByIdRspDTO cachedUser = LOCAL_CACHE.getIfPresent(userId);
+        if(Objects.nonNull(cachedUser)) {
+            log.info("==> 命中本地缓存；{}", cachedUser);
+            return Response.success(cachedUser);
+        }
         // 用户缓存 Redis Key
         String userInfoRedisKey = RedisKeyConstants.buildUserInfoKey(userId);
 
@@ -250,6 +262,12 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isNotBlank(userInfoRedisValue)) {
             // 将存储的 Json 字符串转换成对象，并返回
             FindUserByIdRspDTO findUserByIdRspDTO = JsonUtils.parseObject(userInfoRedisValue, FindUserByIdRspDTO.class);
+            // 写入本地缓存
+            threadPoolTaskExecutor.submit(()->{
+                if(Objects.nonNull(findUserByIdRspDTO)) {
+                    LOCAL_CACHE.put(userId, findUserByIdRspDTO);
+                }
+            }) ;
             return Response.success(findUserByIdRspDTO);
         }
 

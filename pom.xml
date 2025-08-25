@@ -57,6 +57,7 @@
         <transmittable-thread-local.version>2.14.2</transmittable-thread-local.version>
         <minio.version>8.2.1</minio.version>
         <feign-form.version>3.8.0</feign-form.version>
+        <caffeine.version>3.1.8</caffeine.version>
     </properties>
 
     <!-- 统一依赖管理 -->
@@ -232,6 +233,12 @@
                 <groupId>io.github.openfeign.form</groupId>
                 <artifactId>feign-form</artifactId>
                 <version>${feign-form.version}</version>
+            </dependency>
+            <!-- Caffeine 本地缓存 -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
