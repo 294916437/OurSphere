@@ -17,10 +17,14 @@ import com.theoyu.oursphere.note.biz.model.entity.TopicPO;
 import com.theoyu.oursphere.note.biz.model.mapper.ChannelPOMapper;
 import com.theoyu.oursphere.note.biz.model.mapper.NotePOMapper;
 import com.theoyu.oursphere.note.biz.model.mapper.TopicPOMapper;
+import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailReqVO;
+import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailRspVO;
 import com.theoyu.oursphere.note.biz.model.vo.PublishNoteReqVO;
 import com.theoyu.oursphere.note.biz.rpc.IdGeneratorRpcService;
 import com.theoyu.oursphere.note.biz.rpc.KVRpcService;
+import com.theoyu.oursphere.note.biz.rpc.UserRpcService;
 import com.theoyu.oursphere.note.biz.service.NoteService;
+import com.theoyu.oursphere.user.dto.response.FindUserByIdRspDTO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +45,8 @@ public class NoteServiceImpl implements NoteService {
     private IdGeneratorRpcService idGeneratorRpcService;
     @Resource
     private KVRpcService keyValueRpcService;
+    @Resource
+    private UserRpcService userRpcService;
     @Resource
     private ChannelPOMapper channelPOMapper;
 
@@ -155,6 +161,86 @@ public class NoteServiceImpl implements NoteService {
         return Response.success();
     }
 
+    /**
+     * 笔记详情
+     *
+     * @param findNoteDetailReqVO
+     * @return
+     */
+    @Override
+    public Response<FindNoteDetailRspVO> findNoteDetail(FindNoteDetailReqVO findNoteDetailReqVO) {
+        // 查询的笔记 ID
+        Long noteId = findNoteDetailReqVO.getId();
+
+        // 当前登录用户
+        Long userId = LoginUserContextHolder.getUserId();
+
+        // 查询笔记
+        NotePO notePO = notePOMapper.selectByPrimaryKey(noteId);
+
+        // 若该笔记不存在，则抛出业务异常
+        if (Objects.isNull(notePO)) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_NOT_FOUND);
+        }
+
+        // 可见性校验
+        Integer visible = notePO.getVisible();
+        checkNoteVisible(visible, userId, notePO.getCreatorId());
+
+        // RPC: 调用用户服务
+        Long creatorId = notePO.getCreatorId();
+        FindUserByIdRspDTO findUserByIdRspDTO = userRpcService.findById(creatorId);
+
+        // RPC: 调用 K-V 存储服务获取内容
+        String content = null;
+        if (Objects.equals(notePO.getIsContentEmpty(), Boolean.FALSE)) {
+            content = keyValueRpcService.findNoteContent(notePO.getContentUuid());
+        }
+
+        // 笔记类型
+        Integer noteType = notePO.getType();
+        // 图文笔记图片链接(字符串)
+        String imgUrisStr = notePO.getImgUris();
+        // 图文笔记图片链接(集合)
+        List<String> imgUris = null;
+        // 如果查询的是图文笔记，需要将图片链接的逗号分隔开，转换成集合
+        if (Objects.equals(noteType, NoteTypeEnum.IMAGE_TEXT.getCode())
+                && StringUtils.isNotBlank(imgUrisStr)) {
+            imgUris = List.of(imgUrisStr.split(","));
+        }
+
+        // 构建返参 VO 实体类
+        FindNoteDetailRspVO findNoteDetailRspVO = FindNoteDetailRspVO.builder()
+                .id(notePO.getId())
+                .type(notePO.getType())
+                .title(notePO.getTitle())
+                .content(content)
+                .imgUris(imgUris)
+                .topicId(notePO.getTopicId())
+                .topicName(notePO.getTopicName())
+                .creatorId(notePO.getCreatorId())
+                .creatorName(findUserByIdRspDTO.getNickName())
+                .avatar(findUserByIdRspDTO.getAvatar())
+                .videoUri(notePO.getVideoUri())
+                .updateTime(notePO.getUpdateTime())
+                .visible(notePO.getVisible())
+                .build();
+
+        return Response.success(findNoteDetailRspVO);
+    }
+
+    /**
+     * 校验笔记的可见性
+     * @param visible 是否可见
+     * @param currUserId 当前用户 ID
+     * @param creatorId 笔记创建者
+     */
+    private void checkNoteVisible(Integer visible, Long currUserId, Long creatorId) {
+        if (Objects.equals(visible, NoteVisibleEnum.PRIVATE.getCode())
+                && !Objects.equals(currUserId, creatorId)) { // 仅自己可见, 并且访问用户为笔记创建者才能访问，非本人则抛出异常
+            throw new BusinessException(ResponseCodeEnum.NOTE_PRIVATE);
+        }
+    }
     private String handleTopics(List<Object> topicInputs) {
         if (CollUtil.isEmpty(topicInputs)) return null;
 

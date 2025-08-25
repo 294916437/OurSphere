@@ -4,6 +4,8 @@ import com.theoyu.framework.common.response.Response;
 import com.theoyu.oursphere.kv.api.KeyValueFeignApi;
 import com.theoyu.oursphere.kv.dto.request.AddNoteContentReqDTO;
 import com.theoyu.oursphere.kv.dto.request.DeleteNoteContentReqDTO;
+import com.theoyu.oursphere.kv.dto.request.FindNoteContentReqDTO;
+import com.theoyu.oursphere.kv.dto.response.FindNoteContentRspDTO;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +56,23 @@ public class KVRpcService {
 
         return true;
     }
+    /**
+     * 查询笔记内容
+     *
+     * @param uuid
+     * @return
+     */
+    public String findNoteContent(String uuid) {
+        FindNoteContentReqDTO findNoteContentReqDTO = new FindNoteContentReqDTO();
+        findNoteContentReqDTO.setUuid(uuid);
 
+        Response<FindNoteContentRspDTO> response = keyValueFeignApi.findNoteContent(findNoteContentReqDTO);
+
+        if (Objects.isNull(response) || !response.isSuccess() || Objects.isNull(response.getData())) {
+            return null;
+        }
+
+        return response.getData().getContent();
+    }
 
 }

@@ -1,9 +1,12 @@
 package com.theoyu.oursphere.user.api;
+
 import com.theoyu.framework.common.response.Response;
 import com.theoyu.oursphere.user.constants.ApiConstants;
+import com.theoyu.oursphere.user.dto.request.FindUserByIdReqDTO;
 import com.theoyu.oursphere.user.dto.request.FindUserByPhoneReqDTO;
 import com.theoyu.oursphere.user.dto.request.RegisterUserReqDTO;
 import com.theoyu.oursphere.user.dto.request.UpdateUserPasswordReqDTO;
+import com.theoyu.oursphere.user.dto.response.FindUserByIdRspDTO;
 import com.theoyu.oursphere.user.dto.response.FindUserByPhoneRspDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,5 +41,14 @@ public interface  UserFeignApi {
      */
     @PostMapping(value = PREFIX + "/password/update")
     Response<?> updatePassword(@RequestBody UpdateUserPasswordReqDTO updateUserPasswordReqDTO);
+    /**
+     * 根据用户 ID 查询用户信息
+     *
+     * @param findUserByIdReqDTO
+     * @return
+     */
+    @PostMapping(value = PREFIX + "/findById")
+    Response<FindUserByIdRspDTO> findById(@RequestBody FindUserByIdReqDTO findUserByIdReqDTO);
+
 
 }
