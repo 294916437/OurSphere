@@ -18,12 +18,19 @@ spring:
             - Path=/user/**
           filters:
             - StripPrefix=1
+        - id: note
+          uri: lb://oursphere-note
+          predicates:
+            - Path=/note/**
+          filters:
+            - StripPrefix=1
         - id: auth
           uri: lb://oursphere-auth
           predicates:
             - Path=/auth/**
           filters:
             - StripPrefix=1
+
           # 路由级别的超时配置
           metadata:
             connect-timeout: 10000

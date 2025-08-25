@@ -18,7 +18,6 @@ public  class FeignRequestInterceptor  implements RequestInterceptor {
         // 若不为空，则添加到请求头中
         if (Objects.nonNull(userId)) {
             template.header(GlobalConstants.USER_ID, String.valueOf(userId));
-            log.info("### feign 请求设置请求头 userId: {}", userId);
         }
     }
 }

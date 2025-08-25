@@ -90,4 +90,27 @@
       is_deleted = #{isDeleted,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectNameByPrimaryKey" parameterType="java.lang.Long" resultType="string">
+    select
+      name
+    from t_topic
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByTopicIdIn" resultMap="BaseResultMap">
+    select id, name from t_topic
+    where id in
+    <foreach collection="list" item="topicId" open="(" separator="," close=")">
+      #{topicId}
+    </foreach>
+  </select>
+  <select id="selectByTopicName" resultMap="BaseResultMap">
+    select id, name from t_topic where name = #{name}
+  </select>
+  <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id">
+    insert into t_topic(name, create_time, update_time, is_deleted)
+    VALUES
+    <foreach collection="newTopics" item="newTopic" separator=",">
+      (#{newTopic.name}, now(), now(), 0)
+    </foreach>
+  </insert>
 </mapper>

@@ -22,10 +22,11 @@ import com.theoyu.oursphere.user.biz.model.vo.UpdateUserInfoReqVO;
 import com.theoyu.oursphere.user.biz.rpc.OssRpcService;
 import com.theoyu.oursphere.user.biz.rpc.idGeneratorRpcService;
 import com.theoyu.oursphere.user.biz.service.UserService;
-import com.theoyu.oursphere.user.biz.utils.generator.IdGeneratorHelper;
+import com.theoyu.oursphere.user.dto.request.FindUserByIdReqDTO;
 import com.theoyu.oursphere.user.dto.request.FindUserByPhoneReqDTO;
 import com.theoyu.oursphere.user.dto.request.RegisterUserReqDTO;
 import com.theoyu.oursphere.user.dto.request.UpdateUserPasswordReqDTO;
+import com.theoyu.oursphere.user.dto.response.FindUserByIdRspDTO;
 import com.theoyu.oursphere.user.dto.response.FindUserByPhoneRspDTO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -56,8 +57,6 @@ public class UserServiceImpl implements UserService {
     private RolePOMapper rolePOMapper;
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
-    @Resource
-    private IdGeneratorHelper idGeneratorHelper;
 
     @Override
     public Response<?> updateUserInfo(UpdateUserInfoReqVO updateUserInfoReqVO) {
@@ -229,5 +228,27 @@ public class UserServiceImpl implements UserService {
         userPOMapper.updateByPrimaryKeySelective(userPO);
 
         return Response.success();
+    }
+
+    @Override
+    public Response<FindUserByIdRspDTO> findById(FindUserByIdReqDTO findUserByIdReqDTO) {
+        Long userId = findUserByIdReqDTO.getId();
+
+        // 根据用户 ID 查询用户信息
+        UserPO userPO = userPOMapper.selectByPrimaryKey(userId);
+
+        // 判空
+        if (Objects.isNull(userPO)) {
+            throw new BusinessException(ResponseCodeEnum.USER_NOT_FOUND);
+        }
+
+        // 构建返参
+        FindUserByIdRspDTO findUserByIdRspDTO = FindUserByIdRspDTO.builder()
+                .id(userPO.getId())
+                .nickName(userPO.getNickname())
+                .avatar(userPO.getAvatar())
+                .build();
+
+        return Response.success(findUserByIdRspDTO);
     }
 }

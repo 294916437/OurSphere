@@ -4,9 +4,11 @@ import com.theoyu.framework.common.response.Response;
 import com.theoyu.framework.logger.aspect.ApiOperationLog;
 import com.theoyu.oursphere.user.biz.model.vo.UpdateUserInfoReqVO;
 import com.theoyu.oursphere.user.biz.service.UserService;
+import com.theoyu.oursphere.user.dto.request.FindUserByIdReqDTO;
 import com.theoyu.oursphere.user.dto.request.FindUserByPhoneReqDTO;
 import com.theoyu.oursphere.user.dto.request.RegisterUserReqDTO;
 import com.theoyu.oursphere.user.dto.request.UpdateUserPasswordReqDTO;
+import com.theoyu.oursphere.user.dto.response.FindUserByIdRspDTO;
 import com.theoyu.oursphere.user.dto.response.FindUserByPhoneRspDTO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -52,5 +54,9 @@ public class UserController {
     public Response<?> updatePassword(@Validated @RequestBody UpdateUserPasswordReqDTO updateUserPasswordReqDTO) {
         return userService.updatePassword(updateUserPasswordReqDTO);
     }
-
+    @PostMapping("/findById")
+    @ApiOperationLog(description = "查询用户信息")
+    public Response<FindUserByIdRspDTO> findById(@Validated @RequestBody FindUserByIdReqDTO findUserByIdReqDTO) {
+        return userService.findById(findUserByIdReqDTO);
+    }
 }
