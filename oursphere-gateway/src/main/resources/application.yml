@@ -12,6 +12,12 @@ spring:
         connect-timeout: 10000
         response-timeout: 60s    # 增加响应超时时间
       routes:
+        - id: user-relation
+          uri: lb://oursphere-user-relation
+          predicates:
+            - Path=/relation/**
+          filters:
+            - StripPrefix=1
         - id: user
           uri: lb://oursphere-user
           predicates:

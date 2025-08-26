@@ -8,8 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ResponseCodeEnum implements BaseExceptionInterface {
     // ----------- 通用异常状态码 -----------
-    SYSTEM_ERROR("OSS-10000", "系统错误，请稍后尝试..."),
-    PARAM_NOT_VALID("OSS-10001", "参数错误"),
+    SYSTEM_ERROR("USER-10000", "系统错误，请稍后尝试..."),
+    PARAM_NOT_VALID("USER-10001", "参数错误"),
     // ----------- 业务异常状态码 -----------
     NICK_NAME_VALID_FAIL("USER-20001", "昵称请设置2-24个字符，不能使用@《/等特殊字符"),
     USER_APP_ID_VALID_FAIL("USER-20002", "UID号请设置12-18个字符，仅可使用英文（必须）、数字、下划线"),
