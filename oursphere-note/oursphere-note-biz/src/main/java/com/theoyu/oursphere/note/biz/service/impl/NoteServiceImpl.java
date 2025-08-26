@@ -499,6 +499,47 @@ public class NoteServiceImpl implements NoteService {
     }
 
     /**
+     * 笔记置顶 / 取消置顶
+     *
+     * @param topNoteReqVO
+     * @return
+     */
+    @Override
+    public Response<?> topNote(TopNoteReqVO topNoteReqVO) {
+        // 笔记 ID
+        Long noteId = topNoteReqVO.getId();
+        // 是否置顶
+        Boolean isTop = topNoteReqVO.getIsTop();
+
+        // 当前登录用户 ID
+        Long currUserId = LoginUserContextHolder.getUserId();
+
+        // 构建置顶/取消置顶 DO 实体类
+        NotePO noteDO = NotePO.builder()
+                .id(noteId)
+                .isTop(isTop)
+                .updateTime(LocalDateTime.now())
+                .creatorId(currUserId) // 只有笔记作者才能置顶/取消置顶笔记
+                .build();
+
+        int count = notePOMapper.updateIsTop(noteDO);
+
+        if (count == 0) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_CANT_OPERATE);
+        }
+
+        // 删除 Redis 缓存
+        String noteDetailRedisKey = RedisKeyConstants.buildNoteDetailKey(noteId);
+        redisTemplate.delete(noteDetailRedisKey);
+
+        // 同步发送广播模式 MQ，将所有实例中的本地缓存都删除掉
+        rocketMQTemplate.syncSend(MQConstants.TOPIC_DELETE_NOTE_LOCAL_CACHE, noteId);
+        log.info("====> RocketMQ：将被置顶/取消置顶的笔记相关缓存进行删除...");
+
+        return Response.success();
+    }
+
+    /**
      * 删除本地笔记缓存
      * @param noteId
      */

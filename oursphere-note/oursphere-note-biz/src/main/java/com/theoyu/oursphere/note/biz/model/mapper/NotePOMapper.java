@@ -15,4 +15,8 @@ public interface NotePOMapper {
 
     int updateVisibleOnlyMe(NotePO notePO);
 
+    int updateIsTop(NotePO notePO);
+
+
+
 }

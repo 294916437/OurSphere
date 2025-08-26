@@ -219,4 +219,12 @@
     where id = #{id,jdbcType=BIGINT} and `status` = 1
   </update>
 
+  <update id="updateIsTop" parameterType="com.theoyu.oursphere.note.biz.model.entity.NotePO">
+    update t_note
+    set is_top = #{isTop,jdbcType=BIT},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT} and creator_id = #{creatorId,jdbcType=BIGINT}
+  </update>
+
+
 </mapper>
