@@ -23,10 +23,7 @@ import com.theoyu.oursphere.note.biz.model.entity.TopicPO;
 import com.theoyu.oursphere.note.biz.model.mapper.ChannelPOMapper;
 import com.theoyu.oursphere.note.biz.model.mapper.NotePOMapper;
 import com.theoyu.oursphere.note.biz.model.mapper.TopicPOMapper;
-import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailReqVO;
-import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailRspVO;
-import com.theoyu.oursphere.note.biz.model.vo.PublishNoteReqVO;
-import com.theoyu.oursphere.note.biz.model.vo.UpdateNoteReqVO;
+import com.theoyu.oursphere.note.biz.model.vo.*;
 import com.theoyu.oursphere.note.biz.rpc.IdGeneratorRpcService;
 import com.theoyu.oursphere.note.biz.rpc.KVRpcService;
 import com.theoyu.oursphere.note.biz.rpc.UserRpcService;
@@ -408,7 +405,7 @@ public class NoteServiceImpl implements NoteService {
 
         // 同步发送广播模式 MQ，将所有实例中的本地缓存都删除掉
         rocketMQTemplate.syncSend(MQConstants.TOPIC_DELETE_NOTE_LOCAL_CACHE, noteId);
-        log.info("====> RocketMQ：删除笔记本地缓存发送成功...");
+        log.info("====> RocketMQ：将被更新的笔记相关缓存进行删除...");
         // 笔记内容更新
         // 查询此篇笔记内容对应的 UUID
         NotePO notePO1 = notePOMapper.selectByPrimaryKey(noteId);
@@ -433,6 +430,75 @@ public class NoteServiceImpl implements NoteService {
         return Response.success();
     }
     /**
+     * 删除笔记
+     *
+     * @param deleteNoteReqVO
+     * @return
+     */
+    @Override
+    public Response<?> deleteNote(DeleteNoteReqVO deleteNoteReqVO) {
+
+        // 笔记 ID
+        Long noteId = deleteNoteReqVO.getId();
+
+        // 逻辑删除
+        NotePO noteDO = NotePO.builder()
+                .id(noteId)
+                .status(NoteStatusEnum.DELETED.getCode())
+                .updateTime(LocalDateTime.now())
+                .build();
+
+        int count = notePOMapper.updateByPrimaryKeySelective(noteDO);
+
+        // 若影响的行数为 0，则表示该笔记不存在
+        if (count == 0) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_NOT_FOUND);
+        }
+
+        // 删除缓存
+        String noteDetailRedisKey = RedisKeyConstants.buildNoteDetailKey(noteId);
+        redisTemplate.delete(noteDetailRedisKey);
+
+        // 同步发送广播模式 MQ，将所有实例中的本地缓存都删除掉
+        rocketMQTemplate.syncSend(MQConstants.TOPIC_DELETE_NOTE_LOCAL_CACHE, noteId);
+        log.info("====> RocketMQ：将被删除的笔记相关缓存进行删除...");
+
+        return Response.success();
+
+    }
+
+    @Override
+    public Response<?> visibleOnlyMe(UpdateNoteVisibleOnlyMeReqVO updateNoteVisibleOnlyMeReqVO) {
+        // 笔记 ID
+        Long noteId = updateNoteVisibleOnlyMeReqVO.getId();
+
+        // 构建更新 DO 实体类
+        NotePO notePO = NotePO.builder()
+                .id(noteId)
+                .visible(NoteVisibleEnum.PRIVATE.getCode()) // 可见性设置为仅对自己可见
+                .updateTime(LocalDateTime.now())
+                .build();
+
+        // 执行更新 SQL
+        int count = notePOMapper.updateVisibleOnlyMe(notePO);
+
+        // 若影响的行数为 0，则表示该笔记无法修改为仅自己可见
+        if (count == 0) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_CANT_VISIBLE_ONLY_ME);
+        }
+
+        // 删除 Redis 缓存
+        String noteDetailRedisKey = RedisKeyConstants.buildNoteDetailKey(noteId);
+        redisTemplate.delete(noteDetailRedisKey);
+
+        // 同步发送广播模式 MQ，将所有实例中的本地缓存都删除掉
+        rocketMQTemplate.syncSend(MQConstants.TOPIC_DELETE_NOTE_LOCAL_CACHE, noteId);
+        log.info("====> RocketMQ：将被设置为仅自己可见的笔记相关缓存进行删除...");
+
+        return Response.success();
+    }
+
+    /**
      * 删除本地笔记缓存
      * @param noteId
      */
@@ -440,6 +506,7 @@ public class NoteServiceImpl implements NoteService {
     public void deleteNoteLocalCache(Long noteId) {
         LOCAL_CACHE.invalidate(noteId);
     }
+
 
     /**
      * 校验笔记的可见性（针对 VO 实体类）

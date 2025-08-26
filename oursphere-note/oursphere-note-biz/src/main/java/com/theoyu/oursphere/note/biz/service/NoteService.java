@@ -1,10 +1,7 @@
 package com.theoyu.oursphere.note.biz.service;
 
 import com.theoyu.framework.common.response.Response;
-import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailReqVO;
-import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailRspVO;
-import com.theoyu.oursphere.note.biz.model.vo.PublishNoteReqVO;
-import com.theoyu.oursphere.note.biz.model.vo.UpdateNoteReqVO;
+import com.theoyu.oursphere.note.biz.model.vo.*;
 
 public interface  NoteService {
     /**
@@ -30,7 +27,17 @@ public interface  NoteService {
      * @param noteId
      */
     void deleteNoteLocalCache(Long noteId);
-
-
+    /**
+     * 删除笔记
+     * @param deleteNoteReqVO
+     * @return
+     */
+    Response<?> deleteNote(DeleteNoteReqVO deleteNoteReqVO);
+    /**
+     * 笔记仅对自己可见
+     * @param updateNoteVisibleOnlyMeReqVO
+     * @return
+     */
+    Response<?> visibleOnlyMe(UpdateNoteVisibleOnlyMeReqVO updateNoteVisibleOnlyMeReqVO);
 
 }

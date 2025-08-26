@@ -13,4 +13,6 @@ public interface NotePOMapper {
 
     int updateByPrimaryKeySelective(NotePO record);
 
+    int updateVisibleOnlyMe(NotePO notePO);
+
 }
