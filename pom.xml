@@ -24,6 +24,7 @@
         <module>oursphere-kv</module>
         <module>oursphere-id-generator</module>
         <module>oursphere-note</module>
+        <module>oursphere-user-relation</module>
     </modules>
 
     <properties>
