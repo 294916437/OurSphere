@@ -6,6 +6,7 @@ import com.theoyu.framework.logger.aspect.ApiOperationLog;
 import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailReqVO;
 import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailRspVO;
 import com.theoyu.oursphere.note.biz.model.vo.PublishNoteReqVO;
+import com.theoyu.oursphere.note.biz.model.vo.UpdateNoteReqVO;
 import com.theoyu.oursphere.note.biz.service.NoteService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,11 @@ public class NoteController {
     @ApiOperationLog(description = "笔记详情")
     public Response<FindNoteDetailRspVO> findNoteDetail(@Validated @RequestBody FindNoteDetailReqVO findNoteDetailReqVO) {
         return noteService.findNoteDetail(findNoteDetailReqVO);
-    }
 
+    }
+    @PostMapping(value = "/update")
+    @ApiOperationLog(description = "笔记修改")
+    public Response<?> updateNote(@Validated @RequestBody UpdateNoteReqVO updateNoteReqVO) {
+        return noteService.updateNote(updateNoteReqVO);
+    }
 }

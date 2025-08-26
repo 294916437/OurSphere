@@ -13,5 +13,4 @@ public interface NotePOMapper {
 
     int updateByPrimaryKeySelective(NotePO record);
 
-    int updateByPrimaryKey(NotePO record);
 }

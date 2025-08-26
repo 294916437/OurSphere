@@ -11,6 +11,7 @@ import com.theoyu.framework.common.exception.BusinessException;
 import com.theoyu.framework.common.response.Response;
 import com.theoyu.framework.common.utils.JsonUtils;
 import com.theoyu.framework.context.holder.LoginUserContextHolder;
+import com.theoyu.oursphere.note.biz.constants.MQConstants;
 import com.theoyu.oursphere.note.biz.constants.RedisKeyConstants;
 import com.theoyu.oursphere.note.biz.enums.NoteStatusEnum;
 import com.theoyu.oursphere.note.biz.enums.NoteTypeEnum;
@@ -25,6 +26,7 @@ import com.theoyu.oursphere.note.biz.model.mapper.TopicPOMapper;
 import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailReqVO;
 import com.theoyu.oursphere.note.biz.model.vo.FindNoteDetailRspVO;
 import com.theoyu.oursphere.note.biz.model.vo.PublishNoteReqVO;
+import com.theoyu.oursphere.note.biz.model.vo.UpdateNoteReqVO;
 import com.theoyu.oursphere.note.biz.rpc.IdGeneratorRpcService;
 import com.theoyu.oursphere.note.biz.rpc.KVRpcService;
 import com.theoyu.oursphere.note.biz.rpc.UserRpcService;
@@ -34,7 +36,12 @@ import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +66,8 @@ public class NoteServiceImpl implements NoteService {
     private UserRpcService userRpcService;
     @Resource
     private ChannelPOMapper channelPOMapper;
+    @Resource
+    private RocketMQTemplate rocketMQTemplate;
     @Resource(name = "taskExecutor")
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
     @Resource
@@ -121,8 +130,8 @@ public class NoteServiceImpl implements NoteService {
         }
         // RPC: 调用分布式 ID 生成服务，生成笔记 ID
         String snowflakeIdId = idGeneratorRpcService.getSnowflakeId();
-        // 笔记内容 UUID
-        String contentUuid = null;
+        // 生成笔记内容 UUID
+        String contentUuid =null;;
 
         // 笔记内容
         String content = publishNoteReqVO.getContent();
@@ -131,8 +140,7 @@ public class NoteServiceImpl implements NoteService {
         if (StringUtils.isNotBlank(content)) {
             // 内容是否为空，置为 false，即不为空
             isContentEmpty = false;
-            // 生成笔记内容 UUID
-            contentUuid = UUID.randomUUID().toString();
+            contentUuid = UUID.randomUUID().toString();;
             // RPC: 调用 KV 键值服务，存储短文本
             boolean isSavedSuccess = keyValueRpcService.saveNoteContent(contentUuid, content);
 
@@ -299,6 +307,140 @@ public class NoteServiceImpl implements NoteService {
 
         return Response.success(findNoteDetailRspVO);
     }
+
+    @Override
+    public Response<?> updateNote(UpdateNoteReqVO updateNoteReqVO) {
+        // 笔记 ID
+        Long noteId = updateNoteReqVO.getId();
+        // 笔记类型
+        Integer type = updateNoteReqVO.getType();
+
+        // 获取对应类型的枚举
+        NoteTypeEnum noteTypeEnum = NoteTypeEnum.valueOf(type);
+
+        // 若非图文、视频，抛出业务业务异常
+        if (Objects.isNull(noteTypeEnum)) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_TYPE_ERROR);
+        }
+
+        String imgUris = null;
+        String videoUri = null;
+        switch (noteTypeEnum) {
+            case IMAGE_TEXT: // 图文笔记
+                List<String> imgUriList = updateNoteReqVO.getImgUris();
+                // 校验图片是否为空
+                Preconditions.checkArgument(CollUtil.isNotEmpty(imgUriList), "笔记图片不能为空");
+                // 校验图片数量
+                Preconditions.checkArgument(imgUriList.size() <= 8, "笔记图片不能多于 8 张");
+
+                imgUris = StringUtils.join(imgUriList, ",");
+                break;
+            case VIDEO: // 视频笔记
+                videoUri = updateNoteReqVO.getVideoUri();
+                // 校验视频链接是否为空
+                Preconditions.checkArgument(StringUtils.isNotBlank(videoUri), "笔记视频不能为空");
+                break;
+            default:
+                break;
+        }
+
+        // 当前登录用户 ID
+        Long currUserId = LoginUserContextHolder.getUserId();
+        NotePO selectNotePO = notePOMapper.selectByPrimaryKey(noteId);
+
+        // 笔记不存在
+        if (Objects.isNull(selectNotePO)) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_NOT_FOUND);
+        }
+
+        // 判断权限：非笔记发布者不允许更新笔记
+        if (!Objects.equals(currUserId, selectNotePO.getCreatorId())) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_CANT_OPERATE);
+        }
+
+        // 话题
+        Long topicId = updateNoteReqVO.getTopicId();
+        String topicName = null;
+        if (Objects.nonNull(topicId)) {
+            topicName = topicPOMapper.selectNameByPrimaryKey(topicId);
+
+            // 判断一下提交的话题, 是否是真实存在的
+            if (StringUtils.isBlank(topicName)) throw new BusinessException(ResponseCodeEnum.TOPIC_NOT_FOUND);
+        }
+        // 删除 Redis 缓存
+        String noteDetailRedisKey = RedisKeyConstants.buildNoteDetailKey(noteId);
+        redisTemplate.delete(noteDetailRedisKey);
+
+        // 更新笔记元数据表 t_note
+        String content = updateNoteReqVO.getContent();
+        NotePO notePO = NotePO.builder()
+                .id(noteId)
+                .isContentEmpty(StringUtils.isBlank(content))
+                .imgUris(imgUris)
+                .title(updateNoteReqVO.getTitle())
+                .topicId(updateNoteReqVO.getTopicId())
+                .topicName(topicName)
+                .type(type)
+                .updateTime(LocalDateTime.now())
+                .videoUri(videoUri)
+                .build();
+
+        notePOMapper.updateByPrimaryKeySelective(notePO);
+        // 一致性保证：延迟双删
+        Message<String> message = MessageBuilder.withPayload(String.valueOf(noteId))
+                .build();
+
+        rocketMQTemplate.asyncSend(MQConstants.TOPIC_DELAY_DELETE_NOTE_REDIS_CACHE, message,
+                new SendCallback() {
+                    @Override
+                    public void onSuccess(SendResult sendResult) {
+                        log.info("## 延时删除 Redis 笔记缓存消息发送成功...");
+                    }
+
+                    @Override
+                    public void onException(Throwable e) {
+                        log.error("## 延时删除 Redis 笔记缓存消息发送失败...", e);
+                    }
+                },
+                3000, // 超时时间(毫秒)
+                1 // 延迟级别，1 表示延时 1s
+        );
+
+        // 同步发送广播模式 MQ，将所有实例中的本地缓存都删除掉
+        rocketMQTemplate.syncSend(MQConstants.TOPIC_DELETE_NOTE_LOCAL_CACHE, noteId);
+        log.info("====> RocketMQ：删除笔记本地缓存发送成功...");
+        // 笔记内容更新
+        // 查询此篇笔记内容对应的 UUID
+        NotePO notePO1 = notePOMapper.selectByPrimaryKey(noteId);
+        String contentUuid = notePO1.getContentUuid();
+
+        // 笔记内容是否更新成功
+        boolean isUpdateContentSuccess = false;
+        if (StringUtils.isBlank(content)) {
+            // 若笔记内容为空，则删除 K-V 存储
+            isUpdateContentSuccess = keyValueRpcService.deleteNoteContent(contentUuid);
+        } else {
+            contentUuid = StringUtils.isBlank(contentUuid) ? UUID.randomUUID().toString() : contentUuid;
+            // 调用 K-V 更新短文本
+            isUpdateContentSuccess = keyValueRpcService.saveNoteContent(contentUuid, content);
+        }
+
+        // 如果更新失败，抛出业务异常，回滚事务
+        if (!isUpdateContentSuccess) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_UPDATE_FAIL);
+        }
+
+        return Response.success();
+    }
+    /**
+     * 删除本地笔记缓存
+     * @param noteId
+     */
+    @Override
+    public void deleteNoteLocalCache(Long noteId) {
+        LOCAL_CACHE.invalidate(noteId);
+    }
+
     /**
      * 校验笔记的可见性（针对 VO 实体类）
      * @param userId
