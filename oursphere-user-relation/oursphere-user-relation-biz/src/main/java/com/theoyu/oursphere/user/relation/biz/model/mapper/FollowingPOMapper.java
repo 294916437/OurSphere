@@ -1,7 +1,7 @@
 package com.theoyu.oursphere.user.relation.biz.model.mapper;
 
 import com.theoyu.oursphere.user.relation.biz.model.entity.FollowingPO;
-
+import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface FollowingPOMapper {
@@ -18,4 +18,7 @@ public interface FollowingPOMapper {
     int updateByPrimaryKey(FollowingPO record);
 
     List<FollowingPO> selectByUserId(Long userId);
+
+    int deleteByUserIdAndFollowingUserId(@Param("userId") Long userId,
+                                         @Param("unfollowUserId") Long unfollowUserId);
 }
