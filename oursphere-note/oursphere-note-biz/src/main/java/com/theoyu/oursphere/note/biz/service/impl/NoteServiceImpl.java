@@ -440,6 +440,18 @@ public class NoteServiceImpl implements NoteService {
 
         // 笔记 ID
         Long noteId = deleteNoteReqVO.getId();
+        NotePO selectNoteDO = notePOMapper.selectByPrimaryKey(noteId);
+
+        // 判断笔记是否存在
+        if (Objects.isNull(selectNoteDO)) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_NOT_FOUND);
+        }
+
+        // 判断权限：非笔记发布者不允许删除笔记
+        Long currUserId = LoginUserContextHolder.getUserId();
+        if (!Objects.equals(currUserId, selectNoteDO.getCreatorId())) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_CANT_OPERATE);
+        }
 
         // 逻辑删除
         NotePO noteDO = NotePO.builder()
@@ -471,6 +483,18 @@ public class NoteServiceImpl implements NoteService {
     public Response<?> visibleOnlyMe(UpdateNoteVisibleOnlyMeReqVO updateNoteVisibleOnlyMeReqVO) {
         // 笔记 ID
         Long noteId = updateNoteVisibleOnlyMeReqVO.getId();
+        NotePO selectNoteDO = notePOMapper.selectByPrimaryKey(noteId);
+
+        // 判断笔记是否存在
+        if (Objects.isNull(selectNoteDO)) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_NOT_FOUND);
+        }
+
+        // 判断权限：非笔记发布者不允许删除笔记
+        Long currUserId = LoginUserContextHolder.getUserId();
+        if (!Objects.equals(currUserId, selectNoteDO.getCreatorId())) {
+            throw new BusinessException(ResponseCodeEnum.NOTE_CANT_OPERATE);
+        }
 
         // 构建更新 DO 实体类
         NotePO notePO = NotePO.builder()
