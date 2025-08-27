@@ -1,6 +1,7 @@
 package com.theoyu.oursphere.user.relation.biz.consumer;
 
 
+import com.alibaba.nacos.shaded.com.google.common.util.concurrent.RateLimiter;
 import com.theoyu.framework.common.utils.JsonUtils;
 import com.theoyu.oursphere.user.relation.biz.constants.MQConstants;
 import com.theoyu.oursphere.user.relation.biz.model.dto.FollowUserMqDTO;
@@ -35,9 +36,14 @@ public class FollowUnfollowConsumer implements RocketMQListener<Message> {
     private FansPOMapper fansPOMapper;
     @Resource
     private TransactionTemplate transactionTemplate;
+    // 每秒创建 5000 个令牌
+    @Resource
+    private RateLimiter rateLimiter;
 
     @Override
     public void onMessage(Message message) {
+        // 流量削峰：通过获取令牌，如果没有令牌可用，将阻塞，直到获得
+        rateLimiter.acquire();
         // 消息体
         String bodyJsonStr = new String(message.getBody());
         // 标签

@@ -48,6 +48,7 @@ public class RelationServiceImpl implements RelationService {
     private FollowingPOMapper followingPOMapper;
     @Resource
     private RocketMQTemplate rocketMQTemplate;
+
     /**
      * 关注用户
      *
