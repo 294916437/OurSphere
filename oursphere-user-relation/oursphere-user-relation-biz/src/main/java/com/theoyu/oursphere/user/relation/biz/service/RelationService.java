@@ -2,10 +2,10 @@ package com.theoyu.oursphere.user.relation.biz.service;
 
 import com.theoyu.framework.common.response.PageResponse;
 import com.theoyu.framework.common.response.Response;
-import com.theoyu.oursphere.user.relation.biz.model.vo.FindFollowingListReqVO;
-import com.theoyu.oursphere.user.relation.biz.model.vo.FindFollowingUserRspVO;
-import com.theoyu.oursphere.user.relation.biz.model.vo.FollowUserReqVO;
-import com.theoyu.oursphere.user.relation.biz.model.vo.UnfollowUserReqVO;
+import com.theoyu.oursphere.user.relation.biz.model.entity.FansPO;
+import com.theoyu.oursphere.user.relation.biz.model.vo.*;
+
+import java.util.List;
 
 public interface  RelationService {
     /**
@@ -26,4 +26,11 @@ public interface  RelationService {
      * @return
      */
     PageResponse<FindFollowingUserRspVO> findFollowingList(FindFollowingListReqVO findFollowingListReqVO);
+    /**
+     * 查询关注列表
+     * @param findFansListReqVO
+     * @return
+     */
+    PageResponse<FindFansUserRspVO> findFansList(FindFansListReqVO findFansListReqVO);
+
 }
