@@ -1,6 +1,5 @@
 package com.theoyu.oursphere.user.dto.response;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FindUserByIdRspDTO {
-
+public class FindUserByIdsRspDTO {
     /**
      * 用户 ID
      */
@@ -26,9 +24,9 @@ public class FindUserByIdRspDTO {
      * 头像
      */
     private String avatar;
+
     /**
      * 简介
      */
     private String introduction;
-
 }

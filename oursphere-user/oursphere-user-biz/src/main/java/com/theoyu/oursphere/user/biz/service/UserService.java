@@ -2,12 +2,11 @@ package com.theoyu.oursphere.user.biz.service;
 
 import com.theoyu.framework.common.response.Response;
 import com.theoyu.oursphere.user.biz.model.vo.UpdateUserInfoReqVO;
-import com.theoyu.oursphere.user.dto.request.FindUserByIdReqDTO;
-import com.theoyu.oursphere.user.dto.request.FindUserByPhoneReqDTO;
-import com.theoyu.oursphere.user.dto.request.RegisterUserReqDTO;
-import com.theoyu.oursphere.user.dto.request.UpdateUserPasswordReqDTO;
+import com.theoyu.oursphere.user.dto.request.*;
 import com.theoyu.oursphere.user.dto.response.FindUserByIdRspDTO;
 import com.theoyu.oursphere.user.dto.response.FindUserByPhoneRspDTO;
+
+import java.util.List;
 
 public interface UserService {
     /**
@@ -48,4 +47,11 @@ public interface UserService {
      * @return
      */
     Response<FindUserByIdRspDTO> findById(FindUserByIdReqDTO findUserByIdReqDTO);
+    /**
+     * 批量根据用户 ID 查询用户信息
+     *
+     * @param findUsersByIdsReqDTO
+     * @return
+     */
+    Response<List<FindUserByIdRspDTO>> findByIds(FindUsersByIdsReqDTO findUsersByIdsReqDTO);
 }

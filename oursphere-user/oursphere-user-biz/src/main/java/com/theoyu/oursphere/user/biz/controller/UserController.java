@@ -4,10 +4,7 @@ import com.theoyu.framework.common.response.Response;
 import com.theoyu.framework.logger.aspect.ApiOperationLog;
 import com.theoyu.oursphere.user.biz.model.vo.UpdateUserInfoReqVO;
 import com.theoyu.oursphere.user.biz.service.UserService;
-import com.theoyu.oursphere.user.dto.request.FindUserByIdReqDTO;
-import com.theoyu.oursphere.user.dto.request.FindUserByPhoneReqDTO;
-import com.theoyu.oursphere.user.dto.request.RegisterUserReqDTO;
-import com.theoyu.oursphere.user.dto.request.UpdateUserPasswordReqDTO;
+import com.theoyu.oursphere.user.dto.request.*;
 import com.theoyu.oursphere.user.dto.response.FindUserByIdRspDTO;
 import com.theoyu.oursphere.user.dto.response.FindUserByPhoneRspDTO;
 import jakarta.annotation.Resource;
@@ -18,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -59,4 +58,10 @@ public class UserController {
     public Response<FindUserByIdRspDTO> findById(@Validated @RequestBody FindUserByIdReqDTO findUserByIdReqDTO) {
         return userService.findById(findUserByIdReqDTO);
     }
+    @PostMapping("/findByIds")
+    @ApiOperationLog(description = "批量查询用户信息")
+    public Response<List<FindUserByIdRspDTO>> findByIds(@Validated @RequestBody FindUsersByIdsReqDTO findUsersByIdsReqDTO) {
+        return userService.findByIds(findUsersByIdsReqDTO);
+    }
+
 }
