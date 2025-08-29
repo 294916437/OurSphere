@@ -506,15 +506,14 @@ public class RelationServiceImpl implements RelationService {
      */
     private void syncFollowingList2Redis(Long userId) {
         // 查询全量关注用户列表（1000位用户）
-        List<FollowingPO> followingDOS = followingPOMapper.selectAllByUserId(userId);
-        if (CollUtil.isNotEmpty(followingDOS)) {
+        List<FollowingPO> followingPOS = followingPOMapper.selectAllByUserId(userId);
+        if (CollUtil.isNotEmpty(followingPOS)) {
             // 用户关注列表 Redis Key
             String followingListRedisKey = RedisKeyConstants.buildUserFollowingKey(userId);
-            // 随机过期时间
-            // 保底1天+随机秒数
+            // 过期时间 = 保底1天+随机秒数
             long expireSeconds = 60*60*24 + RandomUtil.randomInt(60*60*24);
             // 构建 Lua 参数
-            Object[] luaArgs = buildLuaArgs(followingDOS, expireSeconds);
+            Object[] luaArgs = buildLuaArgs(followingPOS, expireSeconds);
 
             // 执行 Lua 脚本，批量同步关注关系数据到 Redis 中
             DefaultRedisScript<Long> script = new DefaultRedisScript<>();

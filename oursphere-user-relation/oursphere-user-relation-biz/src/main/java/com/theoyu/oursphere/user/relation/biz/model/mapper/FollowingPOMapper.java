@@ -35,7 +35,7 @@ public interface FollowingPOMapper {
                                              @Param("offset") long offset,
                                              @Param("limit") long limit);
     /**
-     * 查询关注用户列表
+     * 查询关注用户列表(1000位)
      * @param userId
      * @return
      */
