@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.theoyu</groupId>
+        <artifactId>oursphere-count</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <packaging>jar</packaging>
+    <artifactId>oursphere-count-api</artifactId>
+    <name>${project.artifactId}</name>
+    <description>RPC层, 供其他服务调用</description>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.theoyu.framework.common</groupId>
+            <artifactId>common</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

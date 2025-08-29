@@ -25,6 +25,7 @@
         <module>oursphere-id-generator</module>
         <module>oursphere-note</module>
         <module>oursphere-user-relation</module>
+        <module>oursphere-count</module>
     </modules>
 
     <properties>
