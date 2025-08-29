@@ -1,6 +1,7 @@
 package com.theoyu.oursphere.count.biz.model.mapper;
 
 import com.theoyu.oursphere.count.biz.model.entity.UserCountPO;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserCountPOMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +15,9 @@ public interface UserCountPOMapper {
     int updateByPrimaryKeySelective(UserCountPO record);
 
     int updateByPrimaryKey(UserCountPO record);
+
+    int insertOrUpdateFansTotalByUserId(@Param("count") Integer count, @Param("userId") Long userId);
+
+    int insertOrUpdateFollowingTotalByUserId(@Param("count") Integer count, @Param("userId") Long userId);
+
 }
