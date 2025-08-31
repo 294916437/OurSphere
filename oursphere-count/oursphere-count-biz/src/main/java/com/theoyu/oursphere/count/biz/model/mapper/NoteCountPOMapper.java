@@ -1,6 +1,7 @@
 package com.theoyu.oursphere.count.biz.model.mapper;
 
 import com.theoyu.oursphere.count.biz.model.entity.NoteCountPO;
+import org.apache.ibatis.annotations.Param;
 
 public interface NoteCountPOMapper {
     int deleteByPrimaryKey(Long id);
@@ -14,4 +15,6 @@ public interface NoteCountPOMapper {
     int updateByPrimaryKeySelective(NoteCountPO record);
 
     int updateByPrimaryKey(NoteCountPO record);
+    int insertOrUpdateLikeTotalByNoteId(@Param("count") Integer count, @Param("noteId") Long noteId);
+
 }
