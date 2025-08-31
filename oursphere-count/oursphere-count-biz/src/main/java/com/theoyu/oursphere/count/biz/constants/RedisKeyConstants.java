@@ -49,4 +49,9 @@ public class RedisKeyConstants {
         return COUNT_NOTE_KEY_PREFIX + noteId;
     }
 
+    /**
+     * Hash Field: 笔记发布总数
+     */
+    public static final String FIELD_NOTE_TOTAL = "noteTotal";
+
 }
