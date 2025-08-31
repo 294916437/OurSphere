@@ -17,6 +17,8 @@ public interface NotePOMapper {
 
     int updateIsTop(NotePO notePO);
 
+    int selectCountByNoteId(Long noteId);
+
 
 
 }
