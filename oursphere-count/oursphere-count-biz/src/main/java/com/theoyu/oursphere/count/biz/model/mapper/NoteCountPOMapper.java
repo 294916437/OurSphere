@@ -15,6 +15,10 @@ public interface NoteCountPOMapper {
     int updateByPrimaryKeySelective(NoteCountPO record);
 
     int updateByPrimaryKey(NoteCountPO record);
+
     int insertOrUpdateLikeTotalByNoteId(@Param("count") Integer count, @Param("noteId") Long noteId);
+
+    int insertOrUpdateCollectTotalByNoteId(@Param("count") Integer count, @Param("noteId") Long noteId);
+
 
 }

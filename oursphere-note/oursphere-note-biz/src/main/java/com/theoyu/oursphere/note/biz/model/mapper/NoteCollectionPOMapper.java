@@ -29,4 +29,6 @@ public interface NoteCollectionPOMapper {
 
     int insertOrUpdate(NoteCollectionPO noteCollectionPO);
 
+    int update2UnCollectByUserIdAndNoteId(NoteCollectionPO noteCollectionPO);
+
 }
