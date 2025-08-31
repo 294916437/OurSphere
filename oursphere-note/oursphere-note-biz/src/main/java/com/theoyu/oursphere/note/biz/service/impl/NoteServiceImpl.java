@@ -712,6 +712,92 @@ public class NoteServiceImpl implements NoteService {
         return Response.success();
     }
     /**
+     * 取消点赞笔记
+     *
+     * @param unlikeNoteReqVO
+     * @return
+     */
+    @Override
+    public Response<?> unlikeNote(UnlikeNoteReqVO unlikeNoteReqVO) {
+        // 笔记ID
+        Long noteId = unlikeNoteReqVO.getId();
+
+        // 1. 校验笔记是否真实存在
+        checkNoteIsExist(noteId);
+        Long userId = LoginUserContextHolder.getUserId();
+
+        // 布隆过滤器 Key
+        String bloomUserNoteLikeListKey = RedisKeyConstants.buildBloomUserNoteLikeListKey(userId);
+        DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+        script.setScriptSource(new ResourceScriptSource(new ClassPathResource("/scripts/bloom_note_unlike_check.lua")));
+        // 返回值类型
+        script.setResultType(Long.class);
+
+        // 执行 Lua 脚本，拿到返回结果
+        Long result = redisTemplate.execute(script, Collections.singletonList(bloomUserNoteLikeListKey), noteId);
+
+        NoteUnlikeLuaResultEnum noteUnlikeLuaResultEnum = NoteUnlikeLuaResultEnum.valueOf(result);
+
+        switch (noteUnlikeLuaResultEnum) {
+            // 布隆过滤器不存在
+            case NOT_EXIST -> {
+                // 异步初始化布隆过滤器
+                threadPoolTaskExecutor.submit(() -> {
+                    // 保底1天+随机秒数
+                    long expireSeconds = 60*60*24 + RandomUtil.randomInt(60*60*24);
+                    batchAddNoteLike2BloomAndExpire(userId, expireSeconds, bloomUserNoteLikeListKey);
+                });
+
+                // 从数据库中校验笔记是否被点赞
+                int count = noteLikePOMapper.selectCountByUserIdAndNoteId(userId, noteId);
+
+                // 未点赞，无法取消点赞操作，抛出业务异常
+                if (count == 0) throw new BusinessException(ResponseCodeEnum.NOTE_NOT_LIKED);
+            }
+            // 布隆过滤器校验目标笔记未被点赞（判断绝对正确）
+            case NOTE_NOT_LIKED -> throw new BusinessException(ResponseCodeEnum.NOTE_NOT_LIKED);
+        }
+
+        // TODO: 2. 校验笔记是否被点赞过
+
+        // 3. 删除 ZSET 中已点赞的笔记 ID
+        String userNoteLikeZSetKey = RedisKeyConstants.buildUserNoteLikeZSetKey(userId);
+
+        redisTemplate.opsForZSet().remove(userNoteLikeZSetKey, noteId);
+
+        //4. 发送 MQ, 数据更新落库
+        LikeUnlikeNoteMqDTO likeUnlikeNoteMqDTO = LikeUnlikeNoteMqDTO.builder()
+                .userId(userId)
+                .noteId(noteId)
+                .type(LikeUnlikeNoteTypeEnum.UNLIKE.getCode()) // 取消点赞笔记
+                .createTime(LocalDateTime.now())
+                .build();
+
+        // 构建消息对象，并将 DTO 转成 Json 字符串设置到消息体中
+        Message<String> message = MessageBuilder.withPayload(JsonUtils.toJsonString(likeUnlikeNoteMqDTO))
+                .build();
+
+        // 通过冒号连接, 可让 MQ 发送给主题 Topic 时，携带上标签 Tag
+        String destination = MQConstants.TOPIC_LIKE_OR_UNLIKE + ":" + MQConstants.TAG_UNLIKE;
+
+        String hashKey = String.valueOf(userId);
+
+        // 异步发送 MQ 消息，提升接口响应速度
+        rocketMQTemplate.asyncSendOrderly(destination, message, hashKey, new SendCallback() {
+            @Override
+            public void onSuccess(SendResult sendResult) {
+                log.info("==> 【笔记取消点赞】MQ 发送成功，SendResult: {}", sendResult);
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                log.error("==> 【笔记取消点赞】MQ 发送异常: ", throwable);
+            }
+        });
+
+        return Response.success();
+    }
+    /**
      * 异步初始化用户点赞笔记 ZSet
      */
     private void asynInitUserNoteLikesZSet(Long userId, String userNoteLikeZSetKey) {

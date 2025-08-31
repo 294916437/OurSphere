@@ -28,7 +28,7 @@ public interface NoteLikePOMapper {
 
     int insertOrUpdate(NoteLikePO noteLikePO);
 
-
+    int update2UnlikeByUserIdAndNoteId(NoteLikePO noteLikePO);
 
 
 }
