@@ -16,11 +16,12 @@ public class CountLikeUnlikeNoteMqDTO {
     private Long userId;
 
     private Long noteId;
-
     /**
      * 0: 取消点赞， 1：点赞
      */
     private Integer type;
 
     private LocalDateTime createTime;
+
+    private Long noteCreatorId;
 }

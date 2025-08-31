@@ -23,4 +23,8 @@ public class CollectUnCollectNoteMqDTO {
     private Integer type;
 
     private LocalDateTime createTime;
+
+    private Long noteCreatorId;
+
+
 }

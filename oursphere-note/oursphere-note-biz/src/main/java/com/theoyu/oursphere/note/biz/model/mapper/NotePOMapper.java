@@ -19,6 +19,9 @@ public interface NotePOMapper {
 
     int selectCountByNoteId(Long noteId);
 
+    Long selectCreatorIdByNoteId(Long noteId);
+
+
 
 
 }
