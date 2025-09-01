@@ -22,7 +22,7 @@ public class DelayDeleteNoteRedisCacheConsumer implements RocketMQListener<Strin
     @Override
     public void onMessage(String body) {
         Long noteId = Long.valueOf(body);
-        log.info("## 延迟消息消费成功, noteId: {}", noteId);
+        log.info("### 延迟消息消费成功, noteId: {}", noteId);
 
         // 删除 Redis 笔记缓存
         String noteDetailRedisKey = RedisKeyConstants.buildNoteDetailKey(noteId);
