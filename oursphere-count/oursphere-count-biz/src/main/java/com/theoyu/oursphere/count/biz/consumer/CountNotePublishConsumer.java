@@ -74,20 +74,4 @@ public class CountNotePublishConsumer implements RocketMQListener<Message> {
     }
 
 
-    /**
-     * 笔记删除
-     * @param bodyJsonStr
-     */
-    private void handleNoteDeleteTagMessage(String bodyJsonStr) {
-
-    }
-
-    /**
-     * 笔记发布
-     * @param bodyJsonStr
-     */
-    private void handleNotePublishTagMessage(String bodyJsonStr) {
-
-    }
-
 }

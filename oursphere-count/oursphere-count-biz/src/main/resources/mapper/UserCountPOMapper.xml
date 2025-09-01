@@ -134,6 +134,11 @@
     VALUES (#{userId}, #{count})
       ON DUPLICATE KEY UPDATE note_total = note_total + (#{count});
   </insert>
+  <insert id="insertOrUpdateCollectTotalByUserId" parameterType="map">
+    INSERT INTO t_user_count (user_id, collect_total)
+    VALUES (#{userId}, #{count})
+      ON DUPLICATE KEY UPDATE collect_total = collect_total + (#{count});
+  </insert>
 
 
 
