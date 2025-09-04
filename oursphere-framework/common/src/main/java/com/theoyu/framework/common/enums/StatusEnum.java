@@ -8,9 +8,9 @@ import lombok.Getter;
 public enum StatusEnum {
 
     // 正常状态
-    ENABLE(1),
+    ENABLE(0),
     // 禁用状态
-    DISABLED(2);
+    DISABLED(1);
 
     private final Integer value;
 }

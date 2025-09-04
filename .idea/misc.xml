@@ -24,13 +24,8 @@
         <option value="$PROJECT_DIR$/oursphere-user-relation/oursphere-user-relation-biz/pom.xml" />
         <option value="$PROJECT_DIR$/oursphere-count/oursphere-count-api/pom.xml" />
         <option value="$PROJECT_DIR$/oursphere-count/oursphere-count-biz/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-search/pom.xml" />
       </list>
-    </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/oursphere-common/pom.xml" />
-        <option value="$PROJECT_DIR$/oursphere-framework/oursphere-common/pom.xml" />
-      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_19" default="true" project-jdk-name="19" project-jdk-type="JavaSDK">

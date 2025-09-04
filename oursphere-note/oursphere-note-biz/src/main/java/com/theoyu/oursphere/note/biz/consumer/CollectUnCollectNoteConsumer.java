@@ -63,7 +63,7 @@ public class CollectUnCollectNoteConsumer implements RocketMQListener<Message> {
      * @param bodyJsonStr
      */
     private void handleCollectNoteTagMessage(String bodyJsonStr) {
-// 消息体 JSON 字符串转 DTO
+        // 消息体 JSON 字符串转 DTO
         CollectUnCollectNoteMqDTO collectUnCollectNoteMqDTO = JsonUtils.parseObject(bodyJsonStr, CollectUnCollectNoteMqDTO.class);
 
         if (Objects.isNull(collectUnCollectNoteMqDTO)) return;
@@ -97,12 +97,12 @@ public class CollectUnCollectNoteConsumer implements RocketMQListener<Message> {
         rocketMQTemplate.asyncSend(MQConstants.TOPIC_COUNT_NOTE_COLLECT, message, new SendCallback() {
             @Override
             public void onSuccess(SendResult sendResult) {
-                log.info("==> 【计数: 笔记取消收藏】MQ 发送成功，SendResult: {}", sendResult);
+                log.info("==> 【计数: 笔记收藏】MQ 发送成功，SendResult: {}", sendResult);
             }
 
             @Override
             public void onException(Throwable throwable) {
-                log.error("==> 【计数: 笔记取消收藏】MQ 发送异常: ", throwable);
+                log.error("==> 【计数: 笔记收藏】MQ 发送异常: ", throwable);
             }
         });
 

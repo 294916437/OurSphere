@@ -26,6 +26,7 @@
         <module>oursphere-note</module>
         <module>oursphere-user-relation</module>
         <module>oursphere-count</module>
+        <module>oursphere-search</module>
     </modules>
 
     <properties>
