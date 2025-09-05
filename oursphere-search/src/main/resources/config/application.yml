@@ -3,6 +3,8 @@ server:
 
 elasticsearch:
   address: 127.0.0.1:9200 # Elasticsearch 地址
+  hotUpdateExtDict: E:\linux\docker\elasticsearch\config\analysis-ik\custom\mydict_hot_update.dic
+
 
 spring:
   profiles:
