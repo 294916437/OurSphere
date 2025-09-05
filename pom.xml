@@ -63,6 +63,7 @@
         <caffeine.version>3.1.8</caffeine.version>
         <rocketmq.version>2.2.3</rocketmq.version>
         <buffertrigger.version>0.2.21</buffertrigger.version>
+        <elasticsearch.version>7.3.0</elasticsearch.version>
 
     </properties>
 
@@ -257,6 +258,22 @@
                 <groupId>com.github.phantomthief</groupId>
                 <artifactId>buffer-trigger</artifactId>
                 <version>${buffertrigger.version}</version>
+            </dependency>
+            <!-- Elasticsearch 分布式搜索引擎 -->
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-client</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

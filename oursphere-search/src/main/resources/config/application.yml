@@ -1,6 +1,9 @@
 server:
   port: 8092 # 项目启动的端口
 
+elasticsearch:
+  address: 127.0.0.1:9200 # Elasticsearch 地址
+
 spring:
   profiles:
     active: dev # 默认激活 dev 本地开发环境
