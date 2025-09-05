@@ -4,7 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import com.alibaba.nacos.shaded.com.google.common.collect.Lists;
 import com.theoyu.framework.common.constants.DateConstants;
 import com.theoyu.framework.common.response.PageResponse;
+import com.theoyu.framework.common.utils.DateUtils;
 import com.theoyu.framework.common.utils.NumberUtils;
+import com.theoyu.oursphere.search.enums.NotePublishTimeRangeEnum;
 import com.theoyu.oursphere.search.enums.NoteSortTypeEnum;
 import com.theoyu.oursphere.search.index.NoteIndex;
 import com.theoyu.oursphere.search.index.UserIndex;
@@ -15,6 +17,7 @@ import com.theoyu.oursphere.search.model.vo.SearchUserRspVO;
 import com.theoyu.oursphere.search.service.SearchService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -23,7 +26,6 @@ import org.elasticsearch.common.lucene.search.function.CombineFunction;
 import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
 import org.elasticsearch.common.lucene.search.function.FunctionScoreQuery;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
@@ -146,6 +148,9 @@ public class SearchServiceImpl implements SearchService {
         Integer type = searchNoteReqVO.getType();
         // 排序类型
         Integer sort = searchNoteReqVO.getSort();
+        // 发布时间范围
+        Integer publishTimeRange = searchNoteReqVO.getPublishTimeRange();
+
 
         // 构建 SearchRequest，指定要查询的索引
         SearchRequest searchRequest = new SearchRequest(NoteIndex.NAME);
@@ -162,22 +167,32 @@ public class SearchServiceImpl implements SearchService {
         if (Objects.nonNull(type)) {
             boolQueryBuilder.filter(QueryBuilders.termQuery(NoteIndex.FIELD_NOTE_TYPE, type));
         }
-        // 创建查询条件
-        //       "query": {
-        //         "multi_match": {
-        //           "query": "壁纸",
-        //           "fields": ["title^2", "topic"]
-        //         }
-        //       },
-        QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery(keyword)
-                .field(NoteIndex.FIELD_NOTE_TITLE, 2.0f) // 手动设置笔记标题的权重值为 2.0
-                .field(NoteIndex.FIELD_NOTE_TOPIC) // 不设置，权重默认为 1.0
-                ;
+        // 按发布时间范围过滤
+        NotePublishTimeRangeEnum notePublishTimeRangeEnum = NotePublishTimeRangeEnum.valueOf(publishTimeRange);
 
-        // 按笔记类型过滤
-        if (Objects.nonNull(type)) {
-            boolQueryBuilder.filter(QueryBuilders.termQuery(NoteIndex.FIELD_NOTE_TYPE, type));
+        if (Objects.nonNull(notePublishTimeRangeEnum)) {
+            // 结束时间
+            String endTime = LocalDateTime.now().format(DateConstants.DATE_FORMAT_Y_M_D_H_M_S);
+            // 开始时间
+            String startTime = null;
+
+            switch (notePublishTimeRangeEnum) {
+                case DAY ->
+                        startTime = DateUtils.localDateTime2String(LocalDateTime.now().minusDays(1)); // 一天之前的时间
+                case WEEK ->
+                        startTime = DateUtils.localDateTime2String(LocalDateTime.now().minusWeeks(1)); // 一周之前的时间
+                case HALF_YEAR ->
+                        startTime = DateUtils.localDateTime2String(LocalDateTime.now().minusMonths(6)); // 半年之前的时间
+            }
+            // 设置时间范围
+            if (StringUtils.isNoneBlank(startTime)) {
+                boolQueryBuilder.filter(QueryBuilders.rangeQuery(NoteIndex.FIELD_NOTE_CREATE_TIME)
+                        .gte(startTime) // 大于等于
+                        .lte(endTime) // 小于等于
+                );
+            }
         }
+
 
         // 排序
         NoteSortTypeEnum noteSortTypeEnum = NoteSortTypeEnum.valueOf(sort);
@@ -319,6 +334,8 @@ public class SearchServiceImpl implements SearchService {
                 String title = (String) sourceAsMap.get(NoteIndex.FIELD_NOTE_TITLE);
                 String avatar = (String) sourceAsMap.get(NoteIndex.FIELD_NOTE_AVATAR);
                 String nickname = (String) sourceAsMap.get(NoteIndex.FIELD_NOTE_NICKNAME);
+                Integer commentTotal = (Integer) sourceAsMap.get(NoteIndex.FIELD_NOTE_COMMENT_TOTAL);
+                Integer collectTotal = (Integer) sourceAsMap.get(NoteIndex.FIELD_NOTE_COLLECT_TOTAL);
                 // 获取更新时间
                 String updateTimeStr = (String) sourceAsMap.get(NoteIndex.FIELD_NOTE_UPDATE_TIME);
                 LocalDateTime updateTime = LocalDateTime.parse(updateTimeStr, DateConstants.DATE_FORMAT_Y_M_D_H_M_S);
@@ -339,7 +356,9 @@ public class SearchServiceImpl implements SearchService {
                         .highlightTitle(highlightedTitle)
                         .avatar(avatar)
                         .nickname(nickname)
-                        .updateTime(updateTime)
+                        .updateTime(DateUtils.formatRelativeTime(updateTime))
+                        .commentTotal(NumberUtils.formatNumberString(commentTotal))
+                        .collectTotal(NumberUtils.formatNumberString(collectTotal))
                         .likeTotal(NumberUtils.formatNumberString(likeTotal))
                         .build();
                 searchNoteRspVOS.add(searchNoteRspVO);
