@@ -2,6 +2,8 @@ package com.theoyu.oursphere.search.controller;
 
 import com.theoyu.framework.common.response.PageResponse;
 import com.theoyu.framework.logger.aspect.ApiOperationLog;
+import com.theoyu.oursphere.search.model.vo.SearchNoteReqVO;
+import com.theoyu.oursphere.search.model.vo.SearchNoteRspVO;
 import com.theoyu.oursphere.search.model.vo.SearchUserReqVO;
 import com.theoyu.oursphere.search.model.vo.SearchUserRspVO;
 import com.theoyu.oursphere.search.service.SearchService;
@@ -24,5 +26,11 @@ public class SearchController {
     @ApiOperationLog(description = "搜索用户")
     public PageResponse<SearchUserRspVO> searchUser(@RequestBody @Validated SearchUserReqVO searchUserReqVO) {
         return searchService.searchUser(searchUserReqVO);
+
+    }
+    @PostMapping("/note")
+    @ApiOperationLog(description = "搜索笔记")
+    public PageResponse<SearchNoteRspVO> searchNote(@RequestBody @Validated SearchNoteReqVO searchNoteReqVO) {
+        return searchService.searchNote(searchNoteReqVO);
     }
 }
