@@ -1,6 +1,4 @@
-logging:
-  level:
-    com.theoyu.oursphere.search.model.mapper: debug
+
 
 
 
