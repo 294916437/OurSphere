@@ -3,6 +3,10 @@ package com.theoyu.oursphere.count.biz.constants;
 public interface  MQConstants {
 
     /**
+     * Topic: 计数 - 笔记点赞数
+     */
+    String TOPIC_LIKE_OR_UNLIKE = "LikeUnlikeTopic";
+    /**
      * Topic: 关注数计数
      */
     String TOPIC_COUNT_FOLLOWING = "CountFollowingTopic";

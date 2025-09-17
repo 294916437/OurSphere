@@ -36,15 +36,14 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class Comment2DBConsumer {
-
+    @Value("${rocketmq.name-server}")
+    private String namesrvAddr;
     @Resource
     private CommentPOMapper commentPOMapper;
     @Resource
     private TransactionTemplate transactionTemplate;
     @Resource
     private KeyValueRpcService keyValueRpcService;
-    @Value("${rocketmq.name-server}")
-    private String namesrvAddr;
 
     private DefaultMQPushConsumer consumer;
 
@@ -83,7 +82,7 @@ public class Comment2DBConsumer {
 
                 List<PublishCommentMqDTO> publishCommentMqDTOS= Lists.newArrayList();
                 msgs.forEach(msg -> {
-                    String msgJson = JsonUtils.toJsonString(msg);
+                    String msgJson = new String(msg.getBody());
                     log.info("==> Consumer - Received message: {}", msgJson);
                     publishCommentMqDTOS.add(JsonUtils.parseObject(msgJson, PublishCommentMqDTO.class));
                 });
@@ -130,7 +129,7 @@ public class Comment2DBConsumer {
                     String content = publishCommentMqDTO.getContent();
                     if(StringUtils.isNotBlank(content)) {
                         commentBO.setContentUuid(UUID.randomUUID().toString());
-                        commentBO.setContentUuid(content);
+                        commentBO.setContent(content);
                         commentBO.setIsContentEmpty(false); // 有评论内容，设置为 false
                     }
 

@@ -1,6 +1,10 @@
 package com.theoyu.oursphere.note.biz.model.mapper;
 
+import com.theoyu.oursphere.note.biz.model.entity.NoteLikePO;
 import com.theoyu.oursphere.note.biz.model.entity.NotePO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface NotePOMapper {
     int deleteByPrimaryKey(Long id);
@@ -20,6 +24,8 @@ public interface NotePOMapper {
     int selectCountByNoteId(Long noteId);
 
     Long selectCreatorIdByNoteId(Long noteId);
+
+
 
 
 

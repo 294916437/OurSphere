@@ -29,6 +29,10 @@ public interface NoteLikePOMapper {
     int insertOrUpdate(NoteLikePO noteLikePO);
 
     int update2UnlikeByUserIdAndNoteId(NoteLikePO noteLikePO);
-
-
+    /**
+     * 批量插入或更新
+     * @param noteLikePOS
+     * @return
+     */
+    int batchInsertOrUpdate(@Param("noteLikeDOS") List<NoteLikePO> noteLikePOS);
 }

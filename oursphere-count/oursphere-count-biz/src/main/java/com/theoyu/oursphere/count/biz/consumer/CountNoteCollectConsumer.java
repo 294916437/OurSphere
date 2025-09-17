@@ -52,6 +52,8 @@ public class CountNoteCollectConsumer implements RocketMQListener<String> {
     }
 
     private void consumeMessage(List<String> bodys) {
+        log.info("==> 【笔记收藏数】聚合消息, {}", JsonUtils.toJsonString(bodys));
+
         // List<String> 转 List<CountCollectUnCollectNoteMqDTO>
         List<CountCollectUnCollectNoteMqDTO> countCollectUnCollectNoteMqDTOS = bodys.stream()
                 .map(body -> JsonUtils.parseObject(body, CountCollectUnCollectNoteMqDTO.class)).toList();
