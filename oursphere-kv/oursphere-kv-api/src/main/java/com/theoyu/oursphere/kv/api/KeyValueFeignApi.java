@@ -3,6 +3,7 @@ package com.theoyu.oursphere.kv.api;
 import com.theoyu.framework.common.response.Response;
 import com.theoyu.oursphere.kv.constants.ApiConstants;
 import com.theoyu.oursphere.kv.dto.request.AddNoteContentReqDTO;
+import com.theoyu.oursphere.kv.dto.request.BatchAddCommentContentReqDTO;
 import com.theoyu.oursphere.kv.dto.request.DeleteNoteContentReqDTO;
 import com.theoyu.oursphere.kv.dto.request.FindNoteContentReqDTO;
 import com.theoyu.oursphere.kv.dto.response.FindNoteContentRspDTO;
@@ -20,4 +21,6 @@ public interface  KeyValueFeignApi {
     Response<FindNoteContentRspDTO> findNoteContent(@RequestBody FindNoteContentReqDTO findNoteContentReqDTO);
     @PostMapping(value = PREFIX + "/note/content/delete")
     Response<?> deleteNoteContent(@RequestBody DeleteNoteContentReqDTO deleteNoteContentReqDTO);
+    @PostMapping(value = PREFIX + "/comment/content/batchAdd")
+    Response<?> batchAddCommentContent(@RequestBody BatchAddCommentContentReqDTO batchAddCommentContentReqDTO);
 }

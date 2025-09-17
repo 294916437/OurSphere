@@ -12,7 +12,7 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommentContentDO {
+public class CommentContentPO {
 
     @PrimaryKey
     private CommentContentPrimaryKey primaryKey;

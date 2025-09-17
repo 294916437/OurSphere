@@ -1,7 +1,7 @@
 package com.theoyu.oursphere.kv.biz.service.impl;
 
 import com.theoyu.framework.common.response.Response;
-import com.theoyu.oursphere.kv.biz.model.entity.CommentContentDO;
+import com.theoyu.oursphere.kv.biz.model.entity.CommentContentPO;
 import com.theoyu.oursphere.kv.biz.model.entity.CommentContentPrimaryKey;
 import com.theoyu.oursphere.kv.biz.service.CommentContentService;
 import com.theoyu.oursphere.kv.dto.request.BatchAddCommentContentReqDTO;
@@ -31,8 +31,8 @@ public class CommentContentServiceImpl implements CommentContentService {
     public Response<?> batchAddCommentContent(BatchAddCommentContentReqDTO batchAddCommentContentReqDTO) {
         List<CommentContentReqDTO> comments = batchAddCommentContentReqDTO.getComments();
 
-        // DTO 转 DO
-        List<CommentContentDO> contentDOS = comments.stream()
+        // DTO 转 PO
+        List<CommentContentPO> contentPOS = comments.stream()
                 .map(commentContentReqDTO -> {
                     // 构建主键类
                     CommentContentPrimaryKey commentContentPrimaryKey = CommentContentPrimaryKey.builder()
@@ -41,18 +41,18 @@ public class CommentContentServiceImpl implements CommentContentService {
                             .contentId(UUID.fromString(commentContentReqDTO.getContentId()))
                             .build();
 
-                    // DO 实体类
-                    CommentContentDO commentContentDO = CommentContentDO.builder()
+                    // PO 实体类
+                    CommentContentPO commentContentPO = CommentContentPO.builder()
                             .primaryKey(commentContentPrimaryKey)
                             .content(commentContentReqDTO.getContent())
                             .build();
 
-                    return commentContentDO;
+                    return commentContentPO;
                 }).toList();
 
         // 批量插入
         cassandraTemplate.batchOps()
-                .insert(contentDOS)
+                .insert(contentPOS)
                 .execute();
 
         return Response.success();

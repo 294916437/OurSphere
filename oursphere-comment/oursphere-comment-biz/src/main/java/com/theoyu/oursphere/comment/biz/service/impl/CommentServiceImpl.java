@@ -8,11 +8,11 @@ import com.theoyu.oursphere.comment.biz.constants.MQConstants;
 import com.theoyu.oursphere.comment.biz.model.dto.PublishCommentMqDTO;
 import com.theoyu.oursphere.comment.biz.model.vo.PublishCommentReqVO;
 import com.theoyu.oursphere.comment.biz.retry.SendMqRetryHelper;
+import com.theoyu.oursphere.comment.biz.rpc.IdGeneratorRpcService;
 import com.theoyu.oursphere.comment.biz.service.CommentService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,9 +22,10 @@ import java.time.LocalDateTime;
 public class CommentServiceImpl implements CommentService {
 
     @Resource
-    private RocketMQTemplate rocketMQTemplate;
-    @Resource
     private SendMqRetryHelper sendMqRetryHelper;
+    @Resource
+    private IdGeneratorRpcService idGeneratorRpcService;
+
     /**
      * 发布评论
      *
@@ -45,7 +46,11 @@ public class CommentServiceImpl implements CommentService {
         // 发布者ID
         Long creatorId = LoginUserContextHolder.getUserId();
 
+        // 调用分布式 ID 生成服务，生成评论 ID
+        String commentId = idGeneratorRpcService.generateCommentId();
+
         PublishCommentMqDTO publishCommentMqDTO = PublishCommentMqDTO.builder()
+                .commentId(Long.valueOf(commentId))
                 .noteId(publishCommentReqVO.getNoteId())
                 .content(content)
                 .imageUrl(imageUrl)
