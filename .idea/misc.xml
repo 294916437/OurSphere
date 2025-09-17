@@ -26,6 +26,8 @@
         <option value="$PROJECT_DIR$/oursphere-count/oursphere-count-biz/pom.xml" />
         <option value="$PROJECT_DIR$/oursphere-search/pom.xml" />
         <option value="$PROJECT_DIR$/oursphere-search/oursphere-search-api/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-comment/oursphere-comment-api/pom.xml" />
+        <option value="$PROJECT_DIR$/oursphere-comment/oursphere-comment-biz/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

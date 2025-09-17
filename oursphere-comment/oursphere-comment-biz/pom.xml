@@ -4,52 +4,25 @@
     <!-- 指定父项目 -->
     <parent>
         <groupId>com.theoyu</groupId>
-        <artifactId>oursphere-note</artifactId>
+        <artifactId>oursphere-comment</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
     <!-- 打包方式 -->
     <packaging>jar</packaging>
 
-    <artifactId>oursphere-note-biz</artifactId>
+    <artifactId>oursphere-comment-biz</artifactId>
     <name>${project.artifactId}</name>
-    <description>笔记服务业务层</description>
+    <description>评论服务业务模块</description>
 
     <dependencies>
         <dependency>
             <groupId>com.theoyu.framework.common</groupId>
             <artifactId>common</artifactId>
         </dependency>
-
-        <!-- 业务接口日志组件 -->
-        <dependency>
-            <groupId>com.theoyu.framework.logger</groupId>
-            <artifactId>logger</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <!-- 上下文组件 -->
-        <dependency>
-            <groupId>com.theoyu.framework.context</groupId>
-            <artifactId>context</artifactId>
-        </dependency>
-
-        <!-- Jackson 组件 -->
-        <dependency>
-            <groupId>com.theoyu.framework.jackson</groupId>
-            <artifactId>jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.theoyu</groupId>
-            <artifactId>oursphere-kv-api</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.theoyu</groupId>
             <artifactId>oursphere-id-generator-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.theoyu</groupId>
-            <artifactId>oursphere-user-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -61,7 +34,16 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
 
+        <!-- 服务发现 -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
         <!-- Mybatis -->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
@@ -80,45 +62,50 @@
             <artifactId>druid-spring-boot-3-starter</artifactId>
         </dependency>
 
+        <!-- 业务接口日志组件 -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <groupId>com.theoyu.framework.logger</groupId>
+            <artifactId>logger</artifactId>
         </dependency>
-
-        <!-- 服务发现 -->
+        <!-- 上下文组件 -->
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <groupId>com.theoyu.framework.context</groupId>
+            <artifactId>context</artifactId>
+        </dependency>
+        <!-- Jackson 组件 -->
+        <dependency>
+            <groupId>com.theoyu.framework.jackson</groupId>
+            <artifactId>jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.theoyu</groupId>
+            <artifactId>oursphere-oss-api</artifactId>
+        </dependency>
+        <!-- 相关工具类 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
         <!-- Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
         <!-- Redis 连接池 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
         </dependency>
         <!-- Caffeine 本地缓存 -->
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
         </dependency>
-        <!-- Rocket MQ -->
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
+
 
     </dependencies>
 
@@ -128,7 +115,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!-- 代码生成器 -->
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>

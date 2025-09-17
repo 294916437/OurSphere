@@ -11,7 +11,7 @@
     <!-- 打包方式 -->
     <packaging>jar</packaging>
 
-    <artifactId>xiaohashu-oss-biz</artifactId>
+    <artifactId>oursphere-oss-biz</artifactId>
     <name>${project.artifactId}</name>
     <description>对象存储业务层</description>
 
