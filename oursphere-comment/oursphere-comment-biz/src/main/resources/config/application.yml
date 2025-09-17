@@ -8,5 +8,7 @@ spring:
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
 
-
-
+retry:
+  max-attempts: 3 # 最大重试次数
+  init-interval: 1000 # 初始延迟时间，单位 ms
+  multiplier: 2 # 每次重试间隔加倍（每次乘以 2）

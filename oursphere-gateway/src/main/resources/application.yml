@@ -12,6 +12,12 @@ spring:
         connect-timeout: 10000
         response-timeout: 60s    # 增加响应超时时间
       routes:
+        - id: comment
+          uri: lb://oursphere-comment
+          predicates:
+            - Path=/comment/**
+          filters:
+            - StripPrefix=1
         - id: user-relation
           uri: lb://oursphere-user-relation
           predicates:

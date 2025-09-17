@@ -33,7 +33,7 @@
         </javaTypeResolver>
 
         <!-- PO 实体类存放路径 -->
-        <javaModelGenerator targetPackage="com.theoyu.oursphere.user.model.entity"
+        <javaModelGenerator targetPackage="com.theoyu.oursphere.comment.biz.model.entity"
                             targetProject="src/main/java"/>
 
         <!-- Mapper xml 文件存放路径-->
@@ -41,12 +41,19 @@
                          targetProject="src/main/resources"/>
 
         <!-- Mapper 接口存放路径 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.theoyu.oursphere.user.model.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.theoyu.oursphere.comment.biz.model.mapper"
                              targetProject="src/main/java"/>
 
         <!-- 需要生成的表-实体类 -->
         <!-- 需要生成的表-实体类 -->
         <table tableName="t_comment" domainObjectName="CommentPO"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false"/>
+        <!-- 需要生成的表-实体类 -->
+        <table tableName="t_comment_like" domainObjectName="CommentLikePO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
