@@ -21,6 +21,14 @@
             <artifactId>common</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.theoyu.framework.logger</groupId>
+            <artifactId>logger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.theoyu.framework.jackson</groupId>
+            <artifactId>jackson</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.theoyu</groupId>
             <artifactId>oursphere-kv-api</artifactId>
         </dependency>
