@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-@RocketMQMessageListener(consumerGroup = "xiaohashu_group_" + MQConstants.TOPIC_COMMENT_HEAT_UPDATE, // Group 组
+@RocketMQMessageListener(consumerGroup = "oursphere_group_" + MQConstants.TOPIC_COMMENT_HEAT_UPDATE, // Group 组
         topic = MQConstants.TOPIC_COMMENT_HEAT_UPDATE // 主题 Topic
 )
 @Slf4j

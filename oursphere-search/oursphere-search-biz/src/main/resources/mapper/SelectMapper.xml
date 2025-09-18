@@ -22,7 +22,7 @@
         </if>
     </select>
     <select id="selectEsUserIndexData" resultType="map" parameterType="map">
-        select u.id, u.nickname, u.avatar, u.xiaohashu_id,
+        select u.id, u.nickname, u.avatar, u.user_id,
         IFNULL(uc.note_total, 0) as note_total,
         IFNULL(uc.fans_total, 0) as fans_total
         from t_user u left join t_user_count uc on u.id = uc.user_id

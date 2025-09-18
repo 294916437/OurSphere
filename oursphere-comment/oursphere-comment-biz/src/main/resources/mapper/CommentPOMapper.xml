@@ -247,7 +247,7 @@
   </update>
   <select id="selectByCommentIds" resultMap="BaseResultMap" parameterType="list">
     select
-    id, level, parent_id, user_id
+    id, level, parent_id, user_id, child_comment_total, like_total, first_reply_comment_id
     from t_comment
     where id in
     <foreach collection="commentIds" open="(" separator="," close=")" item="commentId">

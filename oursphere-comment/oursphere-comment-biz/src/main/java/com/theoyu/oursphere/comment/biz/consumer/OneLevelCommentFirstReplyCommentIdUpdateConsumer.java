@@ -52,6 +52,7 @@ public class OneLevelCommentFirstReplyCommentIdUpdateConsumer implements RocketM
     }
 
     private void consumeMessage(List<String> bodys) {
+        log.info("==> 【一级评论 first_reply_comment_id 更新】聚合消息, size: {}", bodys.size());
         log.info("==> 【一级评论 first_reply_comment_id 更新】聚合消息, {}", JsonUtils.toJsonString(bodys));
 
         // 将聚合后的消息体 Json 转 List<CountPublishCommentMqDTO>
@@ -94,19 +95,18 @@ public class OneLevelCommentFirstReplyCommentIdUpdateConsumer implements RocketM
 
             List<CommentPO> commentPOS =commentPOMapper.selectByCommentIds(missingCommentIds);
 
-            // 异步同步到缓存中
+            // 异步同步到Redis缓存中
             threadPoolTaskExecutor.submit(() -> {
                 List<Long> needSyncCommentIds = commentPOS.stream()
-                        .filter(commentPO -> Objects.nonNull(commentPO.getFirstReplyCommentId()))
+                        .filter(commentPO -> commentPO.getFirstReplyCommentId() !=0)
                         .map(CommentPO::getId)
                         .toList();
                 sync2Redis(needSyncCommentIds);
             });
 
             // 更新 DB 中对应的一级评论（值为0）的 first_reply_comment_id
-
             List<CommentPO> needUpdateCommentPOS = commentPOS.stream()
-                    .filter(commentPO -> Objects.isNull(commentPO.getFirstReplyCommentId()))
+                    .filter(commentPO -> commentPO.getFirstReplyCommentId()==0)
                     .toList();
 
             needUpdateCommentPOS.forEach(commentPO -> {

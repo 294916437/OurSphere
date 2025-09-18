@@ -28,6 +28,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -147,13 +148,14 @@ public class Comment2DBConsumer {
                         CommentPO replyCommentPO = commentIdAndCommentDOMap.get(replyCommentId);
 
                         if (Objects.nonNull(replyCommentPO)) {
-                            // 若回复的评论 ID 不为空，说明是二级评论
+                            // 若回复的评论 ID 有值，说明是二级评论
                             commentBO.setLevel(CommentLevelEnum.TWO.getCode());
 
                             commentBO.setReplyCommentId(publishCommentMqDTO.getReplyCommentId());
                             // 父评论 ID
                             commentBO.setParentId(replyCommentPO.getId());
-                            if (Objects.equals(replyCommentPO.getLevel(), CommentLevelEnum.TWO.getCode())) { // 如果回复的评论属于二级评论
+                            if (Objects.equals(replyCommentPO.getLevel(), CommentLevelEnum.TWO.getCode())) {
+                                // 如果回复的评论属于一级评论
                                 commentBO.setParentId(replyCommentPO.getParentId());
                             }
                             // 回复的哪个用户
@@ -200,7 +202,7 @@ public class Comment2DBConsumer {
                             .toList();
 
                     // 异步发送计数 MQ
-                    org.springframework.messaging.Message<String> message = MessageBuilder.withPayload(JsonUtils.toJsonString(countPublishCommentMqDTOS))
+                    Message<String> message = MessageBuilder.withPayload(JsonUtils.toJsonString(countPublishCommentMqDTOS))
                             .build();
 
                     // 异步发送 MQ 消息
