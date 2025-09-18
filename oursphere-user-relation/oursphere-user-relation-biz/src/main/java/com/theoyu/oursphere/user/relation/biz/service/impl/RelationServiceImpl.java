@@ -224,7 +224,7 @@ public class RelationServiceImpl implements RelationService {
 
                 // 执行 Lua 脚本，批量同步关注关系数据到 Redis 中
                 DefaultRedisScript<Long> script3 = new DefaultRedisScript<>();
-                script3.setScriptSource(new ResourceScriptSource(new ClassPathResource("/lua/follow_batch_add_and_expire.lua")));
+                script3.setScriptSource(new ResourceScriptSource(new ClassPathResource("/scripts/follow_batch_add_and_expire.lua")));
                 script3.setResultType(Long.class);
                 redisTemplate.execute(script3, Collections.singletonList(followingRedisKey), luaArgs);
 
