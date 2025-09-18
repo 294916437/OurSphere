@@ -1,6 +1,7 @@
 package com.theoyu.oursphere.comment.biz.model.mapper;
 
 import com.theoyu.oursphere.comment.biz.model.bo.CommentBO;
+import com.theoyu.oursphere.comment.biz.model.bo.CommentHeatBO;
 import com.theoyu.oursphere.comment.biz.model.entity.CommentPO;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,5 +32,15 @@ public interface CommentPOMapper {
      * @return
      */
     int batchInsert(@Param("comments") List<CommentBO> comments);
+
+    /**
+     * 批量更新热度值
+     * @param commentIds
+     * @param commentHeatBOS
+     * @return
+     */
+    int batchUpdateHeatByCommentIds(@Param("commentIds") List<Long> commentIds,
+                                    @Param("commentHeatBOS") List<CommentHeatBO> commentHeatBOS);
+
 
 }

@@ -269,5 +269,19 @@
     </foreach>
   </insert>
 
+  <update id="batchUpdateHeatByCommentIds" parameterType="map">
+    UPDATE t_comment
+    SET heat = CASE id
+    <foreach collection="commentHeatBOS" item="bo" separator="">
+      WHEN #{bo.id} THEN #{bo.heat}
+    </foreach>
+    ELSE heat END
+    WHERE id IN
+    <foreach collection="commentIds" item="commentId" open="(" close=")" separator=",">
+      #{commentId}
+    </foreach>
+  </update>
+
+
 
 </mapper>
