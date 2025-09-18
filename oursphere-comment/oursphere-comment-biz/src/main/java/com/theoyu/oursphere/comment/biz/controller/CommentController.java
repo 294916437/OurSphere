@@ -1,6 +1,10 @@
 package com.theoyu.oursphere.comment.biz.controller;
 
+import com.theoyu.framework.common.response.PageResponse;
+import com.theoyu.framework.common.response.Response;
 import com.theoyu.framework.logger.aspect.ApiOperationLog;
+import com.theoyu.oursphere.comment.biz.model.vo.FindCommentItemRspVO;
+import com.theoyu.oursphere.comment.biz.model.vo.FindCommentPageListReqVO;
 import com.theoyu.oursphere.comment.biz.model.vo.PublishCommentReqVO;
 import com.theoyu.oursphere.comment.biz.service.CommentService;
 import jakarta.annotation.Resource;
@@ -10,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.theoyu.framework.common.response.Response;
 
 @RestController
 @RequestMapping("/comment")
@@ -25,5 +28,11 @@ public class CommentController {
     public Response<?> publishComment(@Validated @RequestBody PublishCommentReqVO publishCommentReqVO) {
         return commentService.publishComment(publishCommentReqVO);
     }
+    @PostMapping("/list")
+    @ApiOperationLog(description = "评论分页查询")
+    public PageResponse<FindCommentItemRspVO> findCommentPageList(@Validated @RequestBody FindCommentPageListReqVO findCommentPageListReqVO) {
+        return commentService.findCommentPageList(findCommentPageListReqVO);
+    }
+
 
 }

@@ -85,6 +85,10 @@
             <groupId>com.theoyu</groupId>
             <artifactId>oursphere-kv-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.theoyu</groupId>
+            <artifactId>oursphere-user-api</artifactId>
+        </dependency>
         <!-- 相关工具类 -->
         <dependency>
             <groupId>com.google.guava</groupId>

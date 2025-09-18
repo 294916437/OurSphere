@@ -46,14 +46,7 @@
 
         <!-- 需要生成的表-实体类 -->
         <!-- 需要生成的表-实体类 -->
-        <table tableName="t_comment" domainObjectName="CommentPO"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"/>
-        <!-- 需要生成的表-实体类 -->
-        <table tableName="t_comment_like" domainObjectName="CommentLikePO"
+        <table tableName="t_note_count" domainObjectName="NoteCountPO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
