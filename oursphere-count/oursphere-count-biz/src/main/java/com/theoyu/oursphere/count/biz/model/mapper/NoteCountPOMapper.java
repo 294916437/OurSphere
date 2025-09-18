@@ -20,7 +20,7 @@ public interface NoteCountPOMapper {
 
     int insertOrUpdateCollectTotalByNoteId(@Param("count") Integer count, @Param("noteId") Long noteId);
 
-    int insertOrUpdateLikeTotalByUserId(@Param("count") Integer count, @Param("userId") Long userId);
+    int insertOrUpdateCommentTotalByNoteId(@Param("count") int count, @Param("noteId") Long noteId);
 
 
 
