@@ -45,28 +45,7 @@
                              targetProject="src/main/java"/>
 
         <!-- 需要生成的表-实体类 -->
-        <table tableName="t_note_count" domainObjectName="NoteCountPO"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"/>
-        <!-- 需要生成的表-实体类 -->
-        <table tableName="t_user_count" domainObjectName="UserCountPO"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"/>
-        <!-- 需要生成的表-实体类 -->
-        <table tableName="t_note_collection" domainObjectName="NoteCollectionPO"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"/>
-        <!-- 需要生成的表-实体类 -->
-        <table tableName="t_note_like" domainObjectName="NoteLikePO"
+        <table tableName="t_comment" domainObjectName="CommentPO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

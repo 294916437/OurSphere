@@ -190,10 +190,12 @@ public class Comment2DBConsumer {
                 });
                 if(Objects.nonNull(insertedRows)&& insertedRows > 0) {
                     // 构建发送给计数服务的 DTO 集合
-                    List<CountPublishCommentMqDTO> countPublishCommentMqDTOS = publishCommentMqDTOS.stream()
-                            .map(publishCommentMqDTO -> CountPublishCommentMqDTO.builder()
-                                    .noteId(publishCommentMqDTO.getNoteId())
-                                    .commentId(publishCommentMqDTO.getCommentId())
+                    List<CountPublishCommentMqDTO> countPublishCommentMqDTOS = commentBOS.stream()
+                            .map(commentBO -> CountPublishCommentMqDTO.builder()
+                                    .noteId(commentBO.getNoteId())
+                                    .commentId(commentBO.getId())
+                                    .level(commentBO.getLevel())
+                                    .parentId(commentBO.getParentId())
                                     .build())
                             .toList();
 
