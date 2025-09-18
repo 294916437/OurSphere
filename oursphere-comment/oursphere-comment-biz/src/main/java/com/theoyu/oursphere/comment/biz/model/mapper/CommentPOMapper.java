@@ -42,5 +42,21 @@ public interface CommentPOMapper {
     int batchUpdateHeatByCommentIds(@Param("commentIds") List<Long> commentIds,
                                     @Param("commentHeatBOS") List<CommentHeatBO> commentHeatBOS);
 
+    /**
+     * 查询一级评论下最早回复的评论
+     * @param parentId
+     * @return
+     */
+    CommentPO selectLatestByParentId(Long parentId);
+    /**
+     * 更新一级评论的 first_reply_comment_id
+     * @param firstReplyCommentId
+     * @param id
+     * @return
+     */
+    int updateFirstReplyCommentIdByPrimaryKey(@Param("firstReplyCommentId") Long firstReplyCommentId,
+                                              @Param("id") Long id);
+
+
 
 }

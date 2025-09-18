@@ -22,7 +22,7 @@ public class ThreadPoolConfig {
         // 线程活跃时间（秒）
         executor.setKeepAliveSeconds(30);
         // 线程名前缀
-        executor.setThreadNamePrefix("NoteExecutor-");
+        executor.setThreadNamePrefix("CommentExecutor-");
 
         // 拒绝策略：由调用线程处理（一般为主线程）
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());

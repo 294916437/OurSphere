@@ -281,6 +281,15 @@
       #{commentId}
     </foreach>
   </update>
+  <select id="selectLatestByParentId" resultMap="BaseResultMap" parameterType="map">
+    select id from t_comment
+    where parent_id = #{parentId} and level = 2 order by create_time asc limit 1
+  </select>
+  <update id="updateFirstReplyCommentIdByPrimaryKey" parameterType="map">
+    update t_comment
+    set first_reply_comment_id = #{firstReplyCommentId}
+    where id = #{id}
+  </update>
 
 
 
