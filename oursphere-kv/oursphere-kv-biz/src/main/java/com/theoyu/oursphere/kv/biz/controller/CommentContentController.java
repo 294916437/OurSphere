@@ -4,6 +4,7 @@ import com.theoyu.framework.common.response.Response;
 import com.theoyu.framework.logger.aspect.ApiOperationLog;
 import com.theoyu.oursphere.kv.biz.service.CommentContentService;
 import com.theoyu.oursphere.kv.dto.request.BatchAddCommentContentReqDTO;
+import com.theoyu.oursphere.kv.dto.request.BatchFindCommentContentReqDTO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,11 @@ public class CommentContentController {
     @ApiOperationLog(description = "批量存储评论内容")
     public Response<?> batchAddCommentContent(@Validated @RequestBody BatchAddCommentContentReqDTO batchAddCommentContentReqDTO) {
         return commentContentService.batchAddCommentContent(batchAddCommentContentReqDTO);
+    }
+    @PostMapping(value = "/comment/content/batchFind")
+    @ApiOperationLog(description = "批量查询评论内容")
+    public Response<?> batchFindCommentContent(@Validated @RequestBody BatchFindCommentContentReqDTO batchFindCommentContentReqDTO) {
+        return commentContentService.batchFindCommentContent(batchFindCommentContentReqDTO);
     }
 
 }
