@@ -247,7 +247,9 @@
   </update>
   <select id="selectByCommentIds" resultMap="BaseResultMap" parameterType="list">
     select
-    id, level, parent_id, user_id, child_comment_total, like_total, first_reply_comment_id
+    id, user_id, content_uuid, is_content_empty, image_url, like_total,
+    is_top, create_time, first_reply_comment_id, child_comment_total,
+    level, parent_id, heat
     from t_comment
     where id in
     <foreach collection="commentIds" open="(" separator="," close=")" item="commentId">
@@ -292,20 +294,26 @@
   </update>
   <select id="selectPageList" resultMap="BaseResultMap" parameterType="map">
     select id, user_id, content_uuid, is_content_empty, image_url, like_total,
-           is_top, create_time, first_reply_comment_id, child_comment_total
+           is_top, create_time, first_reply_comment_id, child_comment_total,heat
     from t_comment
     where note_id = #{noteId} and level = 1 order by heat desc
       limit #{offset}, #{pageSize}
   </select>
   <select id="selectTwoLevelCommentByIds" resultMap="BaseResultMap" parameterType="list">
     select
-    id, user_id, content_uuid, is_content_empty, image_url, like_total, create_time
+    id, user_id, content_uuid, is_content_empty, image_url, like_total, create_time,heat
     from t_comment
     where id in
     <foreach collection="commentIds" open="(" separator="," close=")" item="commentId">
       #{commentId}
     </foreach>
   </select>
+  <select id="selectHeatComments" resultMap="BaseResultMap">
+    select id, heat
+    from t_comment
+    where note_id = #{noteId} and level = 1 order by heat desc limit 500
+  </select>
+
 
 
 

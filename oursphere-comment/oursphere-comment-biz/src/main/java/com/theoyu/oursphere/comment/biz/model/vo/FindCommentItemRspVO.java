@@ -56,6 +56,11 @@ public class FindCommentItemRspVO {
      */
     private Long childCommentTotal;
 
+
+    /**
+     * 二级评论总数
+     */
+    private Double heat;
     /**
      * 最早回复的评论
      */

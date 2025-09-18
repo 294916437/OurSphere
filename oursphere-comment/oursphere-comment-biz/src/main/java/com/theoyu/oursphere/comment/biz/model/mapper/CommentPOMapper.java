@@ -74,5 +74,13 @@ public interface CommentPOMapper {
     List<CommentPO> selectTwoLevelCommentByIds(@Param("commentIds") List<Long> commentIds);
 
 
+    /**
+     * 查询热门评论
+     * @param noteId
+     * @return
+     */
+    List<CommentPO> selectHeatComments(Long noteId);
+
+
 
 }

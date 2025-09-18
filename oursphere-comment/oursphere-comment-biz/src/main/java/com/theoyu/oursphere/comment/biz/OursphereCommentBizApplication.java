@@ -11,7 +11,8 @@ import org.springframework.retry.annotation.EnableRetry;
 @EnableRetry
 @EnableFeignClients(basePackages = { // 扫描OSS API，用于发现OpenFeign客户端
         "com.theoyu.oursphere.id.generator.api",
-        "com.theoyu.oursphere.kv.api"
+        "com.theoyu.oursphere.kv.api",
+        "com.theoyu.oursphere.user.api",
 })
 public class OursphereCommentBizApplication {
 
